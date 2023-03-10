@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "myNewProject",
-    "slug": "myNewProject",
+    "name": "react-native-proj",
+    "slug": "react-native-proj",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
