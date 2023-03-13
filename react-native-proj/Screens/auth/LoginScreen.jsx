@@ -28,8 +28,8 @@ export default function LoginScreen() {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [formData, setFormData] = useState(initialState);
   const [fontsLoaded] = useFonts({
-    "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
+    // RobotoM: require("../../assets/fonts/Roboto-Medium.ttf"),
+    RobotoR: require("../../assets/fonts/Roboto-Regular.ttf"),
   });
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 20 * 2
@@ -55,6 +55,7 @@ export default function LoginScreen() {
 
   const onSubmitForm = () => {
     onKeyboardHide();
+    console.log(formData);
     setFormData(initialState);
   };
 
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   titleForm: {
-    fontFamily: "Roboto-Medium",
+    // fontFamily: "RobotM",
     fontSize: 30,
     lineHeight: 35,
     textAlign: "center",
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
   },
   input: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "RobotoR",
     fontSize: 16,
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
     top: 20,
     right: 16,
     color: "#1B4371",
-    fontFamily: "Roboto-Regular",
+    fontFamily: "RobotoR",
     fontSize: 16,
     lineHeight: 19,
   },
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   btnText: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "RobotoR",
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
 
   linkText: {
     color: "#1B4371",
-    fontFamily: "Roboto-Regular",
+    fontFamily: "RobotoR",
     fontSize: 16,
     lineHeight: 19,
     textAlign: "center",
