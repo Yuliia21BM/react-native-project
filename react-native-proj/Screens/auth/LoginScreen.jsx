@@ -24,12 +24,12 @@ const initialState = {
   password: "",
 };
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [formData, setFormData] = useState(initialState);
   const [fontsLoaded] = useFonts({
-    // RobotoM: require("../../assets/fonts/Roboto-Medium.ttf"),
     RobotoR: require("../../assets/fonts/Roboto-Regular.ttf"),
+    RobotoM: require("../../assets/fonts/Roboto-MediumItalic.ttf"),
   });
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 20 * 2
@@ -156,7 +156,10 @@ export default function LoginScreen() {
               >
                 <Text style={styles.btnText}>LOG IN</Text>
               </TouchableOpacity>
-              <Text style={styles.linkText}>
+              <Text
+                style={styles.linkText}
+                onPress={() => navigation.navigate("Registration")}
+              >
                 Don't have an account? REGISTER
               </Text>
             </View>
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   titleForm: {
-    // fontFamily: "RobotM",
+    fontFamily: "RobotM",
     fontSize: 30,
     lineHeight: 35,
     textAlign: "center",

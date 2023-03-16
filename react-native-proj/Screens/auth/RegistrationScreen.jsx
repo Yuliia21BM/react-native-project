@@ -26,12 +26,12 @@ const initialState = {
   name: "",
 };
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({ navigation }) {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [formData, setFormData] = useState(initialState);
   const [fontsLoaded] = useFonts({
-    "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
+    RobotoR: require("../../assets/fonts/Roboto-Regular.ttf"),
+    RobotoM: require("../../assets/fonts/Roboto-Medium.ttf"),
   });
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 20 * 2
@@ -182,7 +182,10 @@ export default function RegistrationScreen() {
               >
                 <Text style={styles.btnText}>SIGN IN</Text>
               </TouchableOpacity>
-              <Text style={styles.linkText}>
+              <Text
+                style={styles.linkText}
+                onPress={() => navigation.navigate("Login")}
+              >
                 Already have an account? LOG IN
               </Text>
             </View>
@@ -205,7 +208,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   titleForm: {
-    fontFamily: "Roboto-Medium",
+    fontFamily: "RobotoM",
     fontSize: 30,
     lineHeight: 35,
     textAlign: "center",
@@ -239,7 +242,7 @@ const styles = StyleSheet.create({
     height: 25,
   },
   input: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "RobotoR",
     fontSize: 16,
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
@@ -257,7 +260,7 @@ const styles = StyleSheet.create({
     top: 20,
     right: 16,
     color: "#1B4371",
-    fontFamily: "Roboto-Regular",
+    fontFamily: "RobotoR",
     fontSize: 16,
     lineHeight: 19,
   },
@@ -278,14 +281,14 @@ const styles = StyleSheet.create({
     // }),
   },
   btnText: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "RobotoR",
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
   },
   linkText: {
     color: "#1B4371",
-    fontFamily: "Roboto-Regular",
+    fontFamily: "RobotoR",
     fontSize: 16,
     lineHeight: 19,
     textAlign: "center",
