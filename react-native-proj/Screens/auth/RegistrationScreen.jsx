@@ -12,12 +12,10 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   Image,
+  TouchableHighlight,
 } from "react-native";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-
-SplashScreen.preventAutoHideAsync();
-
+import { AntDesign } from "@expo/vector-icons";
+// import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState, useEffect } from "react";
 
 const initialState = {
@@ -29,10 +27,7 @@ const initialState = {
 export default function RegistrationScreen({ navigation }) {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [formData, setFormData] = useState(initialState);
-  const [fontsLoaded] = useFonts({
-    RobotoR: require("../../assets/fonts/Roboto-Regular.ttf"),
-    RobotoM: require("../../assets/fonts/Roboto-Medium.ttf"),
-  });
+
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 20 * 2
   );
@@ -68,23 +63,6 @@ export default function RegistrationScreen({ navigation }) {
     setFocusedInput(null);
   };
 
-  useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
-    }
-    prepare();
-  }, []);
-
-  if (!fontsLoaded) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Something wetn wrong. Please reload the page!</Text>
-      </View>
-    );
-  } else {
-    SplashScreen.hideAsync();
-  }
-
   return (
     <TouchableWithoutFeedback onPress={onKeyboardHide}>
       <View style={styles.container}>
@@ -103,9 +81,11 @@ export default function RegistrationScreen({ navigation }) {
               }}
             >
               <View style={styles.photoDef}>
-                <Image
+                <AntDesign
+                  name="pluscircleo"
+                  size={24}
+                  color="#FF6C00"
                   style={styles.addPhotoIcon}
-                  source={require("../../assets/images/add-photo.png")}
                 />
               </View>
               <Text style={styles.titleForm}>Registration</Text>
@@ -182,12 +162,15 @@ export default function RegistrationScreen({ navigation }) {
               >
                 <Text style={styles.btnText}>SIGN IN</Text>
               </TouchableOpacity>
-              <Text
-                style={styles.linkText}
+              <TouchableHighlight
+                activeOpacity={0.6}
+                underlayColor="#dcdcdc"
                 onPress={() => navigation.navigate("Login")}
               >
-                Already have an account? LOG IN
-              </Text>
+                <Text style={styles.linkText}>
+                  Already have an account? LOG IN
+                </Text>
+              </TouchableHighlight>
             </View>
             <StatusBar style="auto" />
           </KeyboardAvoidingView>
@@ -208,7 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   titleForm: {
-    fontFamily: "RobotoM",
+    fontFamily: "RobotoMed",
     fontSize: 30,
     lineHeight: 35,
     textAlign: "center",
@@ -242,7 +225,7 @@ const styles = StyleSheet.create({
     height: 25,
   },
   input: {
-    fontFamily: "RobotoR",
+    fontFamily: "RobotoReg",
     fontSize: 16,
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
@@ -260,7 +243,7 @@ const styles = StyleSheet.create({
     top: 20,
     right: 16,
     color: "#1B4371",
-    fontFamily: "RobotoR",
+    fontFamily: "RobotoReg",
     fontSize: 16,
     lineHeight: 19,
   },
@@ -281,14 +264,14 @@ const styles = StyleSheet.create({
     // }),
   },
   btnText: {
-    fontFamily: "RobotoR",
+    fontFamily: "RobotoReg",
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
   },
   linkText: {
     color: "#1B4371",
-    fontFamily: "RobotoR",
+    fontFamily: "RobotoReg",
     fontSize: 16,
     lineHeight: 19,
     textAlign: "center",

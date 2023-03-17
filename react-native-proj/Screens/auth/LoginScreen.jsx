@@ -11,11 +11,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Dimensions,
+  TouchableHighlight,
 } from "react-native";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-
-SplashScreen.preventAutoHideAsync();
 
 import { useState, useEffect } from "react";
 
@@ -27,10 +24,6 @@ const initialState = {
 export default function LoginScreen({ navigation }) {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [formData, setFormData] = useState(initialState);
-  const [fontsLoaded] = useFonts({
-    RobotoR: require("../../assets/fonts/Roboto-Regular.ttf"),
-    RobotoM: require("../../assets/fonts/Roboto-MediumItalic.ttf"),
-  });
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 20 * 2
   );
@@ -66,23 +59,6 @@ export default function LoginScreen({ navigation }) {
   const handleBlur = () => {
     setFocusedInput(null);
   };
-
-  useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
-    }
-    prepare();
-  }, []);
-
-  if (!fontsLoaded) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Something wetn wrong. Please reload the page!</Text>
-      </View>
-    );
-  } else {
-    SplashScreen.hideAsync();
-  }
 
   return (
     <TouchableWithoutFeedback onPress={onKeyboardHide}>
@@ -156,12 +132,15 @@ export default function LoginScreen({ navigation }) {
               >
                 <Text style={styles.btnText}>LOG IN</Text>
               </TouchableOpacity>
-              <Text
-                style={styles.linkText}
+              <TouchableHighlight
+                activeOpacity={0.6}
+                underlayColor="#dcdcdc"
                 onPress={() => navigation.navigate("Registration")}
               >
-                Don't have an account? REGISTER
-              </Text>
+                <Text style={styles.linkText}>
+                  Don't have an account? REGISTER
+                </Text>
+              </TouchableHighlight>
             </View>
             <StatusBar style="auto" />
           </KeyboardAvoidingView>
@@ -182,7 +161,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   titleForm: {
-    fontFamily: "RobotM",
+    fontFamily: "RobotoMed",
     fontSize: 30,
     lineHeight: 35,
     textAlign: "center",
@@ -198,7 +177,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
   },
   input: {
-    fontFamily: "RobotoR",
+    fontFamily: "RobotoReg",
     fontSize: 16,
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
@@ -216,7 +195,7 @@ const styles = StyleSheet.create({
     top: 20,
     right: 16,
     color: "#1B4371",
-    fontFamily: "RobotoR",
+    fontFamily: "RobotoReg",
     fontSize: 16,
     lineHeight: 19,
   },
@@ -229,7 +208,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   btnText: {
-    fontFamily: "RobotoR",
+    fontFamily: "RobotoReg",
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
@@ -237,7 +216,7 @@ const styles = StyleSheet.create({
 
   linkText: {
     color: "#1B4371",
-    fontFamily: "RobotoR",
+    fontFamily: "RobotoReg",
     fontSize: 16,
     lineHeight: 19,
     textAlign: "center",
