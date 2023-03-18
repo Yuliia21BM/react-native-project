@@ -71,7 +71,7 @@ export default function RegistrationScreen({ navigation }) {
           source={require("../../assets/bg-image.jpg")}
         >
           <KeyboardAvoidingView
-            keyboardVerticalOffset={100}
+            keyboardVerticalOffset={50}
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
             <View
