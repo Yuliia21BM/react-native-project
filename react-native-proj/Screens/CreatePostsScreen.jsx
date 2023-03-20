@@ -71,6 +71,8 @@ const styles = StyleSheet.create({
     height: 240,
     backgroundColor: "#F6F6F6",
     marginBottom: 8,
+    borderRadius: 8,
+    overflow: "hidden",
   },
   addPhotoIconWrap: {
     position: "absolute",

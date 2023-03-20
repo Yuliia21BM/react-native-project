@@ -12,6 +12,7 @@ export default function BottomTabsNav() {
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
+        headerStyle: styles.header,
         tabBarIcon: ({ focused, color, size }) => {
           if (route.name === "PostScreen") {
             return (
@@ -55,19 +56,20 @@ export default function BottomTabsNav() {
       <Tabs.Screen
         name="CreatePostScreen"
         component={CreatePostScreen}
-        options={{
+        options={({ navigation }) => ({
           title: "Create post",
           headerTitleAlign: "center",
           headerLeft: () => (
             <Feather
               name="arrow-left"
               size={24}
-              color="rgba(33, 33, 33, 0.8);"
+              color="rgba(33, 33, 33, 0.8)"
+              onPress={() => navigation.navigate("PostScreen")}
             />
           ),
           headerLeftContainerStyle: { paddingLeft: 16 },
           tabBarStyle: { display: "none" },
-        }}
+        })}
       />
       <Tabs.Screen
         options={{ headerShown: false }}
@@ -86,5 +88,15 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: "#FF6C00",
     borderRadius: 20,
+  },
+  header: {
+    shadowColor: "black",
+    shadowOpacity: 0.25,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
