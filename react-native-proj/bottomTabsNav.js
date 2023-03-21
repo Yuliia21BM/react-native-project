@@ -3,18 +3,20 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { StyleSheet, View, Button } from "react-native";
 
 import CreatePostScreen from "./Screens/CreatePostsScreen";
-import PostScreen from "./Screens/PostsScreen";
+// import PostScreen from "./Screens/PostsScreen";
 import ProfileScreen from "./Screens/ProfileScreen";
+import Home from "./Screens/Home";
 
 const Tabs = createBottomTabNavigator();
 
 export default function BottomTabsNav() {
   return (
     <Tabs.Navigator
+      initialRouteName="Home"
       screenOptions={({ route }) => ({
-        headerStyle: styles.header,
+        headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          if (route.name === "PostScreen") {
+          if (route.name === "Home") {
             return (
               <Feather name="grid" size={24} color="rgba(33, 33, 33, 0.8)" />
             );
@@ -42,16 +44,16 @@ export default function BottomTabsNav() {
       })}
     >
       <Tabs.Screen
-        name="PostScreen"
-        options={{
-          title: "Posts",
-          headerTitleAlign: "center",
-          headerRight: () => (
-            <Feather name="log-out" size={24} color="#BDBDBD" />
-          ),
-          headerRightContainerStyle: { paddingRight: 10 },
-        }}
-        component={PostScreen}
+        name="Home"
+        // options={{
+        //   title: "Posts",
+        //   headerTitleAlign: "center",
+        //   headerRight: () => (
+        //     <Feather name="log-out" size={24} color="#BDBDBD" />
+        //   ),
+        //   headerRightContainerStyle: { paddingRight: 10 },
+        // }}
+        component={Home}
       />
       <Tabs.Screen
         name="CreatePostScreen"

@@ -1,7 +1,9 @@
 import { Image, View, Text, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 export default function PostItem({ item }) {
+  const navigations = useNavigation();
   return (
     <View style={styles.container}>
       <Image source={item.photo} style={styles.photo} />
@@ -27,6 +29,7 @@ export default function PostItem({ item }) {
               size={24}
               color="#BDBDBD"
               style={styles.messageIcon}
+              onPress={() => navigations.navigate("Comments")}
             />
             <Text
               style={{
