@@ -77,6 +77,7 @@ export default function PostItem({ item }) {
               size={24}
               color="#BDBDBD"
               style={{ marginRight: 8 }}
+              onPress={() => navigations.navigate("MapScreen")}
             />
             <Text style={styles.location}>{item.lacotion}</Text>
           </View>
