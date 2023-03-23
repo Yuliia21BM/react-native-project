@@ -8,7 +8,7 @@ const MapScreen = () => {
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestPermissionsAsync();
+      let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
       }
@@ -54,4 +54,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default MapScreen;

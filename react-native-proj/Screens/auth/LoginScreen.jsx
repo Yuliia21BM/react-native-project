@@ -58,6 +58,7 @@ export default function LoginScreen({ navigation }) {
 
   const handleBlur = () => {
     setFocusedInput(null);
+    onKeyboardHide();
   };
 
   return (
@@ -68,7 +69,7 @@ export default function LoginScreen({ navigation }) {
           source={require("../../assets/bg-image.jpg")}
         >
           <KeyboardAvoidingView
-            keyboardVerticalOffset={50}
+            keyboardVerticalOffset={-70}
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
             <View

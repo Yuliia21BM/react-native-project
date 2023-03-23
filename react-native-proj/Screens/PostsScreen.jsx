@@ -15,7 +15,7 @@ const posts = [
     photo: defaultPage,
     name: "Forest",
     lacotion: "Ivano-Frankivs'k Region, Ukraine",
-    id: "111",
+    id: 111,
     comments: 0,
     likes: 0,
   },
@@ -23,14 +23,29 @@ const posts = [
     photo: defaultPage,
     name: "Forest",
     lacotion: "Ivano-Frankivs'k Region, Ukraine",
-    id: "112",
+    id: 112,
+    comments: 0,
+    likes: 0,
+  },
+  {
+    photo: defaultPage,
+    name: "Forest",
+    lacotion: "Ivano-Frankivs'k Region, Ukraine",
+    id: 113,
     comments: 0,
     likes: 0,
   },
 ];
 export default function PostScreen() {
   return (
-    <View style={{ flex: 1, backgroundColor: "#fff", paddingTop: 32 }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#fff",
+        paddingTop: 32,
+        paddingBottom: 65,
+      }}
+    >
       <View style={styles.container}>
         <Image source={defaultPhoto} style={styles.photo} />
         <View>
@@ -43,7 +58,6 @@ export default function PostScreen() {
           data={posts}
           renderItem={({ item }) => <PostItem item={item} />}
           keyExtractor={(item) => item.id}
-          style={{ paddingTop: 32, gap: 34 }}
         />
       </SafeAreaView>
     </View>
@@ -56,6 +70,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     marginHorizontal: 16,
+    marginBottom: 32,
   },
   photo: {
     width: 60,

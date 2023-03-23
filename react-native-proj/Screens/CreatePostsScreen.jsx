@@ -1,3 +1,4 @@
+import * as MediaLibrary from "expo-media-library";
 import {
   View,
   StyleSheet,
@@ -6,10 +7,60 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
+  Image,
 } from "react-native";
+import { Camera } from "expo-camera";
 import { FontAwesome, Feather } from "@expo/vector-icons";
+import { useState, useEffect } from "react";
+
+const initialState = {
+  title: "",
+  locationDescr: "",
+  photo: "",
+};
 
 export default function CreatePostScreen() {
+  const [formData, setFormData] = useState(initialState);
+  const [snap, setSnap] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  const takeSnap = async () => {
+    const photo = await snap.takePictureAsync();
+    setFormData((prevS) => ({ ...prevS, photo: photo.uri }));
+    console.log(formData);
+  };
+
+  const onSubmitForm = () => {
+    Keyboard.dismiss();
+    onClearForm();
+  };
+
+  const reviewBTNSubmirDisabled = (disabledStyle, generalStyle) => {
+    if (
+      formData.locationDescr !== "" &&
+      formData.title !== "" &&
+      formData.photo !== ""
+    ) {
+      return generalStyle;
+    } else {
+      return disabledStyle;
+    }
+  };
+
+  const onClearForm = () => {
+    setFormData(initialState);
+  };
   return (
     <View style={{ backgroundColor: "#fff", flex: 1 }}>
       <View style={styles.container}>
@@ -17,24 +68,60 @@ export default function CreatePostScreen() {
           behavior={Platform.OS == "ios" ? "padding" : "height"}
         >
           <View style={styles.photoWrap}>
-            {/* <Image/> */}
-            <TouchableOpacity
-              style={styles.addPhotoIconWrap}
-              activeOpacity={0.8}
-            >
-              <FontAwesome name="camera" size={24} color="#BDBDBD" />
-            </TouchableOpacity>
+            {hasPermission && (
+              <Camera style={{ flex: 1 }} ref={setSnap} type={type}>
+                {formData.photo && (
+                  <Image style={{ flex: 1 }} source={{ uri: formData.photo }} />
+                )}
+                <TouchableOpacity
+                  style={styles.addPhotoIconWrap}
+                  activeOpacity={0.8}
+                  onPress={takeSnap}
+                >
+                  <FontAwesome name="camera" size={24} color="#fff" />
+                </TouchableOpacity>
+                {!formData.photo && (
+                  <TouchableOpacity
+                    style={styles.flipContainer}
+                    onPress={() => {
+                      setType(
+                        type === Camera.Constants.Type.back
+                          ? Camera.Constants.Type.front
+                          : Camera.Constants.Type.back
+                      );
+                    }}
+                  >
+                    <Feather name="refresh-ccw" size={24} color="#fff" />
+                  </TouchableOpacity>
+                )}
+              </Camera>
+            )}
           </View>
           <TouchableOpacity style={{ marginBottom: 48 }} activeOpacity={0.8}>
             <Text style={styles.text}>Upload photo</Text>
           </TouchableOpacity>
           <View style={{ marginBottom: 32 }}>
-            <TextInput placeholder="Title..." style={styles.input} />
+            <TextInput
+              value={formData.title}
+              placeholder="Title..."
+              style={styles.input}
+              onChangeText={(value) =>
+                setFormData((prevS) => ({ ...prevS, title: value }))
+              }
+              onBlur={() => Keyboard.dismiss()}
+              onEndEditing={() => Keyboard.dismiss()}
+            />
           </View>
           <View style={{ marginBottom: 32, position: "relative" }}>
             <TextInput
+              value={formData.locationDescr}
               placeholder="Location"
               style={{ ...styles.input, paddingLeft: 28 }}
+              onChangeText={(value) =>
+                setFormData((prevS) => ({ ...prevS, locationDescr: value }))
+              }
+              onBlur={() => Keyboard.dismiss()}
+              onEndEditing={() => Keyboard.dismiss()}
             />
             <Feather
               name="map-pin"
@@ -44,13 +131,25 @@ export default function CreatePostScreen() {
             />
           </View>
           <TouchableOpacity
-            // onPress={onSubmitForm}
-            style={styles.btn}
+            onPress={onSubmitForm}
+            style={reviewBTNSubmirDisabled(styles.btnDisabled, styles.btn)}
             activeOpacity={0.8}
+            disabled={formData === initialState}
           >
-            <Text style={styles.btnText}>Post</Text>
+            <Text
+              style={reviewBTNSubmirDisabled(
+                styles.btnDisabledText,
+                styles.btnText
+              )}
+            >
+              Publish
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} style={styles.deleteBtn}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.deleteBtn}
+            onPress={onClearForm}
+          >
             <Feather name="trash-2" size={24} color="#BDBDBD" />
           </TouchableOpacity>
         </KeyboardAvoidingView>
@@ -78,12 +177,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "50%",
     left: "50%",
-    transform: [{ translateX: -50 }, { translateY: -50 }],
+    transform: [{ translateX: -30 }, { translateY: -40 }],
     alignItems: "center",
     justifyContent: "center",
     width: 60,
     height: 60,
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     borderRadius: 60 / 2,
   },
   text: {
@@ -103,14 +202,28 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   btn: {
+    backgroundColor: "#FF6C00",
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+    marginBottom: 100,
+  },
+  btnText: {
+    fontFamily: "RobotoReg",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#fff",
+  },
+  btnDisabled: {
     backgroundColor: "#F6F6F6",
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
     padding: 16,
-    marginBottom: 16,
+    marginBottom: 100,
   },
-  btnText: {
+  btnDisabledText: {
     fontFamily: "RobotoReg",
     fontSize: 16,
     lineHeight: 19,
@@ -124,6 +237,13 @@ const styles = StyleSheet.create({
     width: 70,
     height: 40,
     alignSelf: "center",
-    marginTop: "auto",
+  },
+  flipContainer: {
+    position: "absolute",
+    right: 15,
+    bottom: 15,
+    padding: 5,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

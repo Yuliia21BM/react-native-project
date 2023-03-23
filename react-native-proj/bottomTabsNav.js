@@ -3,7 +3,6 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { StyleSheet, View, Button } from "react-native";
 
 import CreatePostScreen from "./Screens/CreatePostsScreen";
-// import PostScreen from "./Screens/PostsScreen";
 import ProfileScreen from "./Screens/ProfileScreen";
 import Home from "./Screens/Home";
 
@@ -59,7 +58,8 @@ export default function BottomTabsNav() {
         name="CreatePostScreen"
         component={CreatePostScreen}
         options={({ navigation }) => ({
-          title: "Create post",
+          title: "Create Post",
+          headerShown: true,
           headerTitleAlign: "center",
           headerLeft: () => (
             <Feather
