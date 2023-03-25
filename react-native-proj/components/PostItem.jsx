@@ -6,7 +6,7 @@ export default function PostItem({ item }) {
   const navigations = useNavigation();
   return (
     <View style={styles.container}>
-      <Image source={item.photo} style={styles.photo} />
+      <Image source={{ uri: item.photo }} style={styles.photo} />
       <View>
         <Text style={{ ...styles.title, marginBottom: 11 }}>{item.name}</Text>
         <View

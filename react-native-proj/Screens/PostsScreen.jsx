@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -10,33 +11,44 @@ import defaultPhoto from "../assets/images/default-photo.jpg";
 import defaultPage from "../assets/images/default-img.jpg";
 
 import PostItem from "../components/PostItem";
-const posts = [
-  {
-    photo: defaultPage,
-    name: "Forest",
-    lacotion: "Ivano-Frankivs'k Region, Ukraine",
-    id: 111,
-    comments: 0,
-    likes: 0,
-  },
-  {
-    photo: defaultPage,
-    name: "Forest",
-    lacotion: "Ivano-Frankivs'k Region, Ukraine",
-    id: 112,
-    comments: 0,
-    likes: 0,
-  },
-  {
-    photo: defaultPage,
-    name: "Forest",
-    lacotion: "Ivano-Frankivs'k Region, Ukraine",
-    id: 113,
-    comments: 0,
-    likes: 0,
-  },
-];
-export default function PostScreen() {
+// const inatPosts = [
+//   {
+//     photo: defaultPage,
+//     name: "Forest",
+//     lacotion: "Ivano-Frankivs'k Region, Ukraine",
+//     id: 111,
+//     comments: 0,
+//     likes: 0,
+//   },
+//   {
+//     photo: defaultPage,
+//     name: "Forest",
+//     lacotion: "Ivano-Frankivs'k Region, Ukraine",
+//     id: 112,
+//     comments: 0,
+//     likes: 0,
+//   },
+// ];
+export default function PostScreen({ route }) {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    if (route.params) {
+      // route.params.formData &&
+      setPosts((prev) => [
+        ...prev,
+        {
+          photo: route.params.formData.photo,
+          name: route.params.formData.title,
+          lacotion: route.params.formData.locationDescr,
+          id: 117,
+          comments: 0,
+          likes: 0,
+        },
+      ]);
+    }
+  }, [route]);
+
   return (
     <View
       style={{

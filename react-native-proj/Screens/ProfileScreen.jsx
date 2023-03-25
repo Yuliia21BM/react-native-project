@@ -6,7 +6,6 @@ import {
   Platform,
   KeyboardAvoidingView,
   Image,
-  SafeAreaView,
   FlatList,
 } from "react-native";
 
@@ -15,30 +14,30 @@ import defaultPhoto from "../assets/images/default-photo.jpg";
 import defaultPage from "../assets/images/default-img.jpg";
 import PostItem from "../components/PostItem";
 
-const posts = [
-  {
-    photo: defaultPage,
-    name: "Forest",
-    lacotion: "Ivano-Frankivs'k Region, Ukraine",
-    id: "111",
-    comments: 0,
-    likes: 3,
-  },
-  // {
-  //   photo: defaultPage,
-  //   name: "Forest",
-  //   lacotion: "Ivano-Frankivs'k Region, Ukraine",
-  //   id: "112",
-  //   comments: 0,
-  // },
-  // {
-  //   photo: defaultPage,
-  //   name: "Forest",
-  //   lacotion: "Ivano-Frankivs'k Region, Ukraine",
-  //   id: "113",
-  //   comments: 0,
-  // },
-];
+// const posts = [
+//   {
+//     photo: defaultPage,
+//     name: "Forest",
+//     lacotion: "Ivano-Frankivs'k Region, Ukraine",
+//     id: "111",
+//     comments: 0,
+//     likes: 3,
+//   },
+//   {
+//     photo: defaultPage,
+//     name: "Forest",
+//     lacotion: "Ivano-Frankivs'k Region, Ukraine",
+//     id: "112",
+//     comments: 0,
+//   },
+//   {
+//     photo: defaultPage,
+//     name: "Forest",
+//     lacotion: "Ivano-Frankivs'k Region, Ukraine",
+//     id: "113",
+//     comments: 0,
+//   },
+// ];
 
 export default function ProfileScreen({ navigation }) {
   return (
@@ -75,14 +74,12 @@ export default function ProfileScreen({ navigation }) {
               />
             </View>
             <Text style={styles.title}>Yulia Mykhailiuk</Text>
-            <SafeAreaView>
-              <FlatList
-                data={posts}
-                renderItem={({ item }) => <PostItem item={item} />}
-                keyExtractor={(item) => item.id}
-                style={{ gap: 34 }}
-              />
-            </SafeAreaView>
+            {/* <FlatList
+              data={posts}
+              renderItem={({ item }) => <PostItem item={item} />}
+              keyExtractor={(item) => item.id}
+              style={{ gap: 34 }}
+            /> */}
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>

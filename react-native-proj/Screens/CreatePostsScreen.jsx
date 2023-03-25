@@ -20,13 +20,14 @@ const initialState = {
   photo: "",
 };
 
-export default function CreatePostScreen() {
+export default function CreatePostScreen({ navigation }) {
   const [formData, setFormData] = useState(initialState);
   const [snap, setSnap] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
 
   useEffect(() => {
+    setFormData((prevS) => ({ ...prevS, photo: "" }));
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
@@ -38,12 +39,12 @@ export default function CreatePostScreen() {
   const takeSnap = async () => {
     const photo = await snap.takePictureAsync();
     setFormData((prevS) => ({ ...prevS, photo: photo.uri }));
-    console.log(formData);
   };
 
   const onSubmitForm = () => {
     Keyboard.dismiss();
     onClearForm();
+    navigation.navigate("PostScreen", { formData });
   };
 
   const reviewBTNSubmirDisabled = (disabledStyle, generalStyle) => {
