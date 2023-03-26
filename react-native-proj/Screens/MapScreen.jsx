@@ -1,27 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions, Image } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
 
-const MapScreen = () => {
-  const [location, setLocation] = useState(null);
-
+const MapScreen = ({ route }) => {
+  const [locationDescr, setlocationDescr] = useState("");
+  const [location, setLocation] = useState({});
+  const [photo, setPhoto] = useState("");
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-      setLocation(coords);
-    })();
+    if (route.params) {
+      console.log(route.params);
+      setlocationDescr(route.params.locationDescr);
+      setLocation(route.params.location);
+      setPhoto(route.params.photo);
+    }
   }, []);
-
   return (
     <View style={styles.container}>
       <MapView
@@ -34,7 +26,12 @@ const MapScreen = () => {
         showsUserLocation={true}
       >
         {location && (
-          <Marker title="I am here" coordinate={location} description="Hello" />
+          <Marker
+            title={locationDescr}
+            coordinate={location}
+            description="Hello"
+            pinColor="#ff6600"
+          />
         )}
       </MapView>
     </View>

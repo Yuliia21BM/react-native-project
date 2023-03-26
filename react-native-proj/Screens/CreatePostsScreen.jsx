@@ -1,4 +1,5 @@
 import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
 import {
   View,
   StyleSheet,
@@ -18,6 +19,7 @@ const initialState = {
   title: "",
   locationDescr: "",
   photo: "",
+  location: {},
 };
 
 export default function CreatePostScreen({ navigation }) {
@@ -33,6 +35,26 @@ export default function CreatePostScreen({ navigation }) {
       await MediaLibrary.requestPermissionsAsync();
 
       setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      console.log(location.coords.latitude, location.coords.longitude);
+      setFormData((prevS) => ({
+        ...prevS,
+        location: {
+          longitude: location.coords.longitude,
+          latitude: location.coords.latitude,
+        },
+      }));
     })();
   }, []);
 
