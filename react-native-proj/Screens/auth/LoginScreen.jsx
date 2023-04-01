@@ -13,12 +13,14 @@ import {
   Dimensions,
   TouchableHighlight,
 } from "react-native";
-
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import { authLogInUser } from "../../redux/auth/authOperations";
 
 const initialState = {
-  email: "",
-  password: "",
+  userEmail: "",
+  userPassword: "",
 };
 
 export default function LoginScreen({ navigation }) {
@@ -29,6 +31,8 @@ export default function LoginScreen({ navigation }) {
   );
   const [isShownPassword, setIsShownPassword] = useState(true);
   const [focusedInput, setFocusedInput] = useState(null);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const onChangeWidth = () => {
@@ -47,8 +51,8 @@ export default function LoginScreen({ navigation }) {
   };
 
   const onSubmitForm = () => {
+    dispatch(authLogInUser(formData));
     onKeyboardHide();
-    console.log(formData);
     setFormData(initialState);
   };
 
@@ -82,7 +86,7 @@ export default function LoginScreen({ navigation }) {
               <View style={{ marginBottom: 16 }}>
                 <TextInput
                   placeholder="Email"
-                  value={formData.email}
+                  value={formData.userEmail}
                   style={[
                     { ...styles.input, width: dimensions },
                     focusedInput === "input1" && styles.focusedTextInput,
@@ -94,14 +98,14 @@ export default function LoginScreen({ navigation }) {
                   onBlur={handleBlur}
                   onEndEditing={onKeyboardHide}
                   onChangeText={(value) =>
-                    setFormData((prevS) => ({ ...prevS, email: value }))
+                    setFormData((prevS) => ({ ...prevS, userEmail: value }))
                   }
                 />
               </View>
               <View style={{ marginBottom: 43, position: "relative" }}>
                 <TextInput
                   placeholder="Password"
-                  value={formData.password}
+                  value={formData.userPassword}
                   style={[
                     { ...styles.input, width: dimensions },
                     focusedInput === "input2" && styles.focusedTextInput,
@@ -114,7 +118,7 @@ export default function LoginScreen({ navigation }) {
                   secureTextEntry={isShownPassword}
                   onEndEditing={onKeyboardHide}
                   onChangeText={(value) =>
-                    setFormData((prevS) => ({ ...prevS, password: value }))
+                    setFormData((prevS) => ({ ...prevS, userPassword: value }))
                   }
                 />
                 <Text

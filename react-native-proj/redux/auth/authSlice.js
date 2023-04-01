@@ -1,21 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: { name: null, email: null },
-  token: null,
-  isLoggedIn: false,
-  isRefreshingUser: false,
+  userID: null,
+  userName: null,
+  userEmail: null,
+  avatar: null,
+  isCurrentUser: false,
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  extraReducers: (builder) => {
-    // builder
-    //   .addCase(signupUser.fulfilled, (state, action) => {
-    //     state.user = action.payload.user;
-    //     state.token = action.payload.token;
-    //     state.isLoggedIn = true;
-    //   })
+  reducers: (builder) => {
+    builder
+      .addCase(updateUserProfile, (state, { payload }) => {
+        state.userID = payload.userID;
+        state.userName = payload.userName;
+        state.userEmail = payload.userEmail;
+        state.avatar = payload.avatar;
+        state.isCurrentUser = payload.isCurrentUser;
+      })
+      .addCase(logout, (state) => {
+        state.userID = null;
+        state.userName = null;
+        state.userEmail = null;
+        state.avatar = null;
+        state.isCurrentUser = false;
+      });
   },
 });

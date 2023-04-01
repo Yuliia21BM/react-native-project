@@ -5,17 +5,21 @@ import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+// import { useSelector } from "react-redux";
+
+// import { selectIsCurrentUser } from "./redux/auth/authSelectors";
 
 import AuthNav from "./authNav";
 import BottomTabsNav from "./bottomTabsNav";
 
 export default function App() {
-  const [isRegistered, setIsRegistered] = useState(false);
+  // const isCurrentUser = useSelector(selectIsCurrentUser);
   const [fontsLoaded] = useFonts({
     RobotoReg: require("./assets/fonts/Roboto-Regular.ttf"),
     RobotoMed: require("./assets/fonts/Roboto-Medium.ttf"),
     RobotoBold: require("./assets/fonts/Roboto-Bold.ttf"),
   });
+
   useEffect(() => {
     async function prepare() {
       await SplashScreen.preventAutoHideAsync();
@@ -35,7 +39,11 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        {isRegistered ? <BottomTabsNav /> : <AuthNav />}
+        {/* {isCurrentUser ? */}
+        {/* <BottomTabsNav /> */}
+        {/* : */}
+        <AuthNav />
+        {/* } */}
       </NavigationContainer>
     </Provider>
   );

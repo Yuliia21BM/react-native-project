@@ -1,42 +1,82 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
+  // signOut,
 } from "firebase/auth";
-import { db } from "../../firebase/config";
+import { authSlice } from "./authSlice";
+import { auth } from "../../firebase/config";
 
-export const authSignUpUser = createAsyncThunk(
-  "auth/signup",
-  async (credentials, thunkAPI) => {
+export const authRegistration =
+  ({ userName, userEmail, userPassword, avatar }) =>
+  async (dispatch) => {
     try {
-      console.log(credentials);
-      const user = await signInWithEmailAndPassword(
-        db,
-        credentials.email,
-        credentials.password
-      );
-      console.log("user", user);
-      return data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
+      await createUserWithEmailAndPassword(auth, userEmail, userPassword);
+      await updateProfile(auth.currentUser, {
+        displayName: userName,
+        photoURL: avatar,
+      });
 
-export const authSignInUser = createAsyncThunk(
-  "auth/signup",
-  async (credentials, thunkAPI) => {
-    try {
-      console.log(credentials);
-      const user = await createUserWithEmailAndPassword(
-        db,
-        credentials.email,
-        credentials.password
+      const { uid, displayName, email, photoURL } = auth.currentUser;
+
+      // await AsyncStorage.setItem("auth_email", email);
+      // await AsyncStorage.setItem("auth_password", password);
+
+      dispatch(
+        authSlice.actions.updateUserProfile({
+          userId: uid,
+          userName: displayName,
+          userEmail: email,
+          avatar: photoURL,
+          isCurrentUser: true,
+        })
       );
-      console.log("user", user);
-      return data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      console.log(error.message);
+      return error.message;
     }
+  };
+
+export const authLogInUser =
+  ({ userEmail, userPassword }) =>
+  async (dispatch) => {
+    try {
+      const { user } = await signInWithEmailAndPassword(
+        auth,
+        userEmail,
+        userPassword
+      );
+
+      const { displayName, email, photoURL, uid } = user;
+
+      await AsyncStorage.setItem("auth_email", user.email);
+      await AsyncStorage.setItem("auth_password", password);
+
+      dispatch(
+        authSlice.actions.updateUserProfile({
+          userId: uid,
+          userName: displayName,
+          userEmail: email,
+          avatar: photoURL,
+          isCurrentUser: true,
+        })
+      );
+
+      return { user };
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  };
+
+export const authLogout = () => async (dispatch) => {
+  try {
+    await signOut(auth);
+    dispatch(authSlice.actions.logout());
+    // await AsyncStorage.removeItem("auth_email");
+    // await AsyncStorage.removeItem("auth_password");
+    // dispatch(postsSlice.actions.reset());
+  } catch (error) {
+    return error.message;
   }
-);
+};

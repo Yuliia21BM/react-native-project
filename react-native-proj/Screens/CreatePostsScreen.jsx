@@ -10,10 +10,11 @@ import {
   Platform,
   Keyboard,
   Image,
+  ScrollView,
 } from "react-native";
 import { Camera } from "expo-camera";
 import { FontAwesome, Feather } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const initialState = {
   title: "",
@@ -27,6 +28,8 @@ export default function CreatePostScreen({ navigation }) {
   const [snap, setSnap] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+
+  // const snapRef = useRef();
 
   useEffect(() => {
     setFormData((prevS) => ({ ...prevS, photo: "" }));
@@ -47,7 +50,6 @@ export default function CreatePostScreen({ navigation }) {
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      console.log(location.coords.latitude, location.coords.longitude);
       setFormData((prevS) => ({
         ...prevS,
         location: {
@@ -59,8 +61,9 @@ export default function CreatePostScreen({ navigation }) {
   }, []);
 
   const takeSnap = async () => {
-    const photo = await snap.takePictureAsync();
-    setFormData((prevS) => ({ ...prevS, photo: photo.uri }));
+    const { uri } = await snap.takePictureAsync();
+    await MediaLibrary.createAssetAsync(uri);
+    setFormData((prevS) => ({ ...prevS, photo: uri }));
   };
 
   const onSubmitForm = () => {
@@ -85,7 +88,7 @@ export default function CreatePostScreen({ navigation }) {
     setFormData(initialState);
   };
   return (
-    <View style={{ backgroundColor: "#fff", flex: 1 }}>
+    <ScrollView style={{ backgroundColor: "#fff", flex: 1 }}>
       <View style={styles.container}>
         <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -94,7 +97,19 @@ export default function CreatePostScreen({ navigation }) {
             {hasPermission && (
               <Camera style={{ flex: 1 }} ref={setSnap} type={type}>
                 {formData.photo && (
-                  <Image style={{ flex: 1 }} source={{ uri: formData.photo }} />
+                  <View style={{ flex: 1 }}>
+                    <Image
+                      source={{ uri: formData.photo }}
+                      style={previewPhoto}
+                    />
+                    <Text style={{ color: "#FFFFFF", fontSize: 16 }}>
+                      {
+                        // format(
+                        Date.now()
+                        // , "	PPpp")
+                      }
+                    </Text>
+                  </View>
                 )}
                 <TouchableOpacity
                   style={styles.addPhotoIconWrap}
@@ -177,7 +192,7 @@ export default function CreatePostScreen({ navigation }) {
           </TouchableOpacity>
         </KeyboardAvoidingView>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
