@@ -10,7 +10,7 @@ import AuthNav from "./authNav";
 import BottomTabsNav from "./bottomTabsNav";
 
 export default function App() {
-  const [isRegistered, setIsRegistered] = useState(true);
+  const [isRegistered, setIsRegistered] = useState(false);
   const [fontsLoaded] = useFonts({
     RobotoReg: require("./assets/fonts/Roboto-Regular.ttf"),
     RobotoMed: require("./assets/fonts/Roboto-Medium.ttf"),
