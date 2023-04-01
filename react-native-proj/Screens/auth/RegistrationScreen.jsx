@@ -15,24 +15,30 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-// import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import * as ImagePicker from "expo-image-picker";
+
+import { authRegistration } from "../../redux/auth/authOperations";
+import { log } from "react-native-reanimated";
 
 const initialState = {
-  email: "",
-  password: "",
-  name: "",
+  userEmail: "",
+  userPassword: "",
+  userName: "",
+  avatar: "",
 };
 
 export default function RegistrationScreen({ navigation }) {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [formData, setFormData] = useState(initialState);
-
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 20 * 2
   );
   const [isShownPassword, setIsShownPassword] = useState(true);
   const [focusedInput, setFocusedInput] = useState(null);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const onChangeWidth = () => {
@@ -45,12 +51,33 @@ export default function RegistrationScreen({ navigation }) {
     // };
   }, []);
 
+  const selectImage = async () => {
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+
+    if (pickerResult.canceled === true) {
+      return;
+    }
+
+    const source = { uri: pickerResult.assets[0].uri };
+    setFormData((prevS) => ({ ...prevS, avatar: source })); // Set the selected image as the avatar
+  };
+
   const onKeyboardHide = () => {
     setIsKeyboardShown(false);
     Keyboard.dismiss();
   };
 
   const onSubmitForm = () => {
+    console.log("submit");
+    dispatch(authRegistration(formData));
     onKeyboardHide();
     setFormData(initialState);
   };
@@ -81,18 +108,42 @@ export default function RegistrationScreen({ navigation }) {
               }}
             >
               <View style={styles.photoDef}>
-                <AntDesign
-                  name="pluscircleo"
-                  size={24}
-                  color="#FF6C00"
-                  style={styles.addPhotoIcon}
-                />
+                {formData.avatar && (
+                  <Image
+                    source={formData.avatar}
+                    style={{ flex: 1, borderRadius: 16 }}
+                  />
+                )}
+                {!formData.avatar ? (
+                  <TouchableOpacity
+                    style={styles.addPhotoIcon}
+                    activeOpacity={0.8}
+                    onPress={selectImage}
+                  >
+                    <AntDesign name="pluscircleo" size={24} color="#FF6C00" />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.addPhotoIcon}
+                    activeOpacity={0.8}
+                    onPress={() =>
+                      setFormData((prevS) => ({ ...prevS, avatar: "" }))
+                    }
+                  >
+                    <AntDesign
+                      name="closecircleo"
+                      size={24}
+                      color="#dad9d9"
+                      style={{ backgroundColor: "#fff", borderRadius: 50 }}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
               <Text style={styles.titleForm}>Registration</Text>
               <View style={{ marginBottom: 16 }}>
                 <TextInput
                   placeholder="Name"
-                  value={formData.name}
+                  value={formData.userName}
                   style={[
                     { ...styles.input, width: dimensions },
                     focusedInput === "input1" && styles.focusedTextInput,
@@ -104,14 +155,14 @@ export default function RegistrationScreen({ navigation }) {
                   onBlur={handleBlur}
                   onEndEditing={onKeyboardHide}
                   onChangeText={(value) =>
-                    setFormData((prevS) => ({ ...prevS, name: value }))
+                    setFormData((prevS) => ({ ...prevS, userName: value }))
                   }
                 />
               </View>
               <View style={{ marginBottom: 16 }}>
                 <TextInput
                   placeholder="Email"
-                  value={formData.email}
+                  value={formData.userEmail}
                   style={[
                     { ...styles.input, width: dimensions },
                     focusedInput === "input2" && styles.focusedTextInput,
@@ -123,14 +174,14 @@ export default function RegistrationScreen({ navigation }) {
                   onBlur={handleBlur}
                   onEndEditing={onKeyboardHide}
                   onChangeText={(value) =>
-                    setFormData((prevS) => ({ ...prevS, email: value }))
+                    setFormData((prevS) => ({ ...prevS, userEmail: value }))
                   }
                 />
               </View>
               <View style={{ marginBottom: 43, position: "relative" }}>
                 <TextInput
                   placeholder="Password"
-                  value={formData.password}
+                  value={formData.userPassword}
                   style={[
                     { ...styles.input, width: dimensions },
                     focusedInput === "input3" && styles.focusedTextInput,
@@ -143,7 +194,7 @@ export default function RegistrationScreen({ navigation }) {
                     handleFocus("input3");
                   }}
                   onChangeText={(value) =>
-                    setFormData((prevS) => ({ ...prevS, password: value }))
+                    setFormData((prevS) => ({ ...prevS, userPassword: value }))
                   }
                 />
                 <Text
