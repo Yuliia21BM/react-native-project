@@ -1,5 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { Feather } from "@expo/vector-icons";
+import { authLogout } from "../redux/auth/authOperations";
+import { useDispatch } from "react-redux";
 
 const Stack = createStackNavigator();
 
@@ -8,6 +10,7 @@ import MapScreen from "./MapScreen";
 import PostScreen from "./PostsScreen";
 
 export default function Home() {
+  const dispatch = useDispatch();
   return (
     <Stack.Navigator initialRouteName="PostScreen">
       <Stack.Screen
@@ -16,7 +19,12 @@ export default function Home() {
           title: "Posts",
           headerTitleAlign: "center",
           headerRight: () => (
-            <Feather name="log-out" size={24} color="#BDBDBD" />
+            <Feather
+              name="log-out"
+              size={24}
+              color="#BDBDBD"
+              onPress={() => dispatch(authLogout)}
+            />
           ),
           headerRightContainerStyle: { paddingRight: 10 },
         }}
