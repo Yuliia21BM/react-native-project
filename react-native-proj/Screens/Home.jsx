@@ -23,7 +23,7 @@ export default function Home() {
               name="log-out"
               size={24}
               color="#BDBDBD"
-              onPress={() => dispatch(authLogout)}
+              onPress={() => dispatch(authLogout())}
             />
           ),
           headerRightContainerStyle: { paddingRight: 10 },

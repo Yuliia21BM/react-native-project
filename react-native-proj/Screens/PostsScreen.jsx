@@ -7,12 +7,20 @@ import {
   Image,
   Text,
 } from "react-native";
+import { useSelector } from "react-redux";
+import {
+  selectAvatar,
+  selectUserName,
+  selectUserEmail,
+} from "../redux/auth/authSelectors";
 import defaultPhoto from "../assets/images/default-photo.jpg";
-import defaultPage from "../assets/images/default-img.jpg";
 
 import PostItem from "../components/PostItem";
 
 export default function PostScreen({ route }) {
+  const avatar = useSelector(selectAvatar);
+  const userName = useSelector(selectUserName);
+  const userEmaill = useSelector(selectUserEmail);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -42,10 +50,13 @@ export default function PostScreen({ route }) {
       }}
     >
       <View style={styles.container}>
-        <Image source={defaultPhoto} style={styles.photo} />
+        <Image
+          source={avatar ? { uri: avatar } : defaultPhoto}
+          style={styles.photo}
+        />
         <View>
-          <Text style={styles.userName}>Yulia</Text>
-          <Text style={styles.userEmail}>yulia@gmail.com</Text>
+          <Text style={styles.userName}>{userName}</Text>
+          <Text style={styles.userEmail}>{userEmaill}</Text>
         </View>
       </View>
       <SafeAreaView>

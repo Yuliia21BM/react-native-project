@@ -10,36 +10,21 @@ import {
 } from "react-native";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import { authLogout } from "../redux/auth/authOperations";
+import { useDispatch } from "react-redux";
+
+import { selectAvatar, selectUserName } from "../redux/auth/authSelectors";
 import defaultPhoto from "../assets/images/default-photo.jpg";
 import defaultPage from "../assets/images/default-img.jpg";
 import PostItem from "../components/PostItem";
-
-// const posts = [
-//   {
-//     photo: defaultPage,
-//     name: "Forest",
-//     lacotion: "Ivano-Frankivs'k Region, Ukraine",
-//     id: "111",
-//     comments: 0,
-//     likes: 3,
-//   },
-//   {
-//     photo: defaultPage,
-//     name: "Forest",
-//     lacotion: "Ivano-Frankivs'k Region, Ukraine",
-//     id: "112",
-//     comments: 0,
-//   },
-//   {
-//     photo: defaultPage,
-//     name: "Forest",
-//     lacotion: "Ivano-Frankivs'k Region, Ukraine",
-//     id: "113",
-//     comments: 0,
-//   },
-// ];
+import { useState } from "react";
 
 export default function ProfileScreen({ navigation }) {
+  const avatar = useSelector(selectAvatar);
+  const userName = useSelector(selectUserName);
+  const dispatch = useDispatch();
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -60,10 +45,11 @@ export default function ProfileScreen({ navigation }) {
                 marginBottom: 46,
                 paddingRight: 16,
               }}
+              onPress={() => dispatch(authLogout())}
             />
             <View style={styles.photoDef}>
               <Image
-                source={defaultPhoto}
+                source={avatar ? { uri: avatar } : defaultPhoto}
                 style={{ width: "100%", height: "100%", borderRadius: 16 }}
               />
               <AntDesign
@@ -73,7 +59,7 @@ export default function ProfileScreen({ navigation }) {
                 style={styles.addPhotoIcon}
               />
             </View>
-            <Text style={styles.title}>Yulia Mykhailiuk</Text>
+            <Text style={styles.title}>{userName}</Text>
             {/* <FlatList
               data={posts}
               renderItem={({ item }) => <PostItem item={item} />}

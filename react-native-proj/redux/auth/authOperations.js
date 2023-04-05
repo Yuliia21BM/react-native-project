@@ -2,16 +2,20 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-  // signOut,
+  signOut,
 } from "firebase/auth";
 import { authSlice } from "./authSlice";
 import { auth } from "../../firebase/config";
+import { log } from "react-native-reanimated";
+
+const { logout, updateUserProfile } = authSlice.actions;
 
 export const authRegistration =
   ({ userName, userEmail, userPassword, avatar }) =>
   async (dispatch) => {
     try {
-      await createUserWithEmailAndPassword(auth, userEmail, userPassword);
+      const updatedEmail = userEmail.toLowerCase();
+      await createUserWithEmailAndPassword(auth, updatedEmail, userPassword);
       await updateProfile(auth.currentUser, {
         displayName: userName,
         photoURL: avatar,
@@ -23,7 +27,7 @@ export const authRegistration =
       // await AsyncStorage.setItem("auth_password", password);
 
       dispatch(
-        authSlice.actions.updateUserProfile({
+        updateUserProfile({
           userId: uid,
           userName: displayName,
           userEmail: email,
@@ -46,14 +50,15 @@ export const authLogInUser =
         userEmail,
         userPassword
       );
+      console.log(user);
 
       const { displayName, email, photoURL, uid } = user;
 
-      await AsyncStorage.setItem("auth_email", user.email);
-      await AsyncStorage.setItem("auth_password", password);
+      // await AsyncStorage.setItem("auth_email", user.email);
+      // await AsyncStorage.setItem("auth_password", password);
 
       dispatch(
-        authSlice.actions.updateUserProfile({
+        updateUserProfile({
           userId: uid,
           userName: displayName,
           userEmail: email,
@@ -64,7 +69,7 @@ export const authLogInUser =
 
       return { user };
     } catch (error) {
-      console.log(error.message);
+      console.error(error);
       return error.message;
     }
   };
@@ -72,7 +77,7 @@ export const authLogInUser =
 export const authLogout = () => async (dispatch) => {
   try {
     await signOut(auth);
-    dispatch(authSlice.actions.logout());
+    dispatch(logout());
     // await AsyncStorage.removeItem("auth_email");
     // await AsyncStorage.removeItem("auth_password");
     // dispatch(postsSlice.actions.reset());

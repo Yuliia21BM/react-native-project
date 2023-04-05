@@ -20,7 +20,6 @@ import { useDispatch } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
 
 import { authRegistration } from "../../redux/auth/authOperations";
-import { log } from "react-native-reanimated";
 
 const initialState = {
   userEmail: "",
@@ -66,7 +65,8 @@ export default function RegistrationScreen({ navigation }) {
       return;
     }
 
-    const source = { uri: pickerResult.assets[0].uri };
+    const source = pickerResult.assets[0].uri;
+    console.log(source);
     setFormData((prevS) => ({ ...prevS, avatar: source })); // Set the selected image as the avatar
   };
 
@@ -110,7 +110,7 @@ export default function RegistrationScreen({ navigation }) {
               <View style={styles.photoDef}>
                 {formData.avatar && (
                   <Image
-                    source={formData.avatar}
+                    source={{ uri: formData.avatar }}
                     style={{ flex: 1, borderRadius: 16 }}
                   />
                 )}

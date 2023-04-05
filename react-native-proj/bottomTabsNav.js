@@ -42,18 +42,7 @@ export default function BottomTabsNav() {
         },
       })}
     >
-      <Tabs.Screen
-        name="Home"
-        // options={{
-        //   title: "Posts",
-        //   headerTitleAlign: "center",
-        //   headerRight: () => (
-        //     <Feather name="log-out" size={24} color="#BDBDBD" />
-        //   ),
-        //   headerRightContainerStyle: { paddingRight: 10 },
-        // }}
-        component={Home}
-      />
+      <Tabs.Screen name="Home" component={Home} />
       <Tabs.Screen
         name="CreatePostScreen"
         component={CreatePostScreen}

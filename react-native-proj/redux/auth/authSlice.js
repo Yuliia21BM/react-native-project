@@ -11,21 +11,20 @@ const initialState = {
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: (builder) => {
-    builder
-      .addCase(updateUserProfile, (state, { payload }) => {
-        state.userID = payload.userID;
-        state.userName = payload.userName;
-        state.userEmail = payload.userEmail;
-        state.avatar = payload.avatar;
-        state.isCurrentUser = payload.isCurrentUser;
-      })
-      .addCase(logout, (state) => {
-        state.userID = null;
-        state.userName = null;
-        state.userEmail = null;
-        state.avatar = null;
-        state.isCurrentUser = false;
-      });
+  reducers: {
+    updateUserProfile: (state, { payload }) => {
+      state.userID = payload.userID;
+      state.userName = payload.userName;
+      state.userEmail = payload.userEmail;
+      state.avatar = payload.avatar;
+      state.isCurrentUser = payload.isCurrentUser;
+    },
+    logout: (state) => {
+      state.userID = null;
+      state.userName = null;
+      state.userEmail = null;
+      state.avatar = null;
+      state.isCurrentUser = false;
+    },
   },
 });
