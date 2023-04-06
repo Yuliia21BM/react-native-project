@@ -29,7 +29,7 @@ export const authRegistration =
 
       dispatch(
         updateUserProfile({
-          userId: uid,
+          userID: uid,
           userName: displayName,
           userEmail: email,
           avatar: photoURL,
@@ -61,7 +61,7 @@ export const authLogInUser =
 
       dispatch(
         updateUserProfile({
-          userId: uid,
+          userID: uid,
           userName: displayName,
           userEmail: email,
           avatar: photoURL,

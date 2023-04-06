@@ -15,8 +15,10 @@ import {
 import { Camera } from "expo-camera";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { useState, useEffect, useRef } from "react";
+import { uploadPostToStore } from "../redux/posts/postsOperations";
 
 import { uploadPhotoToServer } from "../utils/uploadPhotoToServer";
+import { useDispatch } from "react-redux";
 
 const initialState = {
   title: "",
@@ -30,6 +32,7 @@ export default function CreatePostScreen({ navigation }) {
   const [snap, setSnap] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setFormData((prevS) => ({ ...prevS, photo: "" }));
@@ -63,19 +66,33 @@ export default function CreatePostScreen({ navigation }) {
   const takeSnap = async () => {
     const { uri } = await snap.takePictureAsync();
     await MediaLibrary.createAssetAsync(uri);
+    const uploadedPhoto = await uploadPhotoToServer(uri, "postScreen");
+    console.log(uploadedPhoto);
     setFormData((prevS) => ({ ...prevS, photo: uri }));
   };
 
-  const onSubmitForm = async () => {
+  const onSubmitForm = () => {
+    // const id = Date.now();
     Keyboard.dismiss();
     onClearForm();
-    const uploadedPhoto = await uploadPhotoToServer(
-      formData.photo,
-      "postPhoto"
+    dispatch(
+      uploadPostToStore({
+        photo: formData.photo,
+        name: formData.title,
+        locationDescr: formData.locationDescr,
+        location: formData.location,
+        // id,
+        comments: 0,
+        likes: 0,
+      })
     );
-    console.log("uploadedPhoto", uploadedPhoto);
-    setFormData((prevS) => ({ ...prevS, photo: uploadedPhoto }));
-    navigation.navigate("PostScreen", { formData });
+    // const uploadedPhoto = await uploadPhotoToServer(
+    //   formData.photo,
+    //   "postPhoto"
+    // );
+    // console.log("uploadedPhoto", uploadedPhoto);
+    // setFormData((prevS) => ({ ...prevS, photo: uploadedPhoto }));
+    // navigation.navigate("PostScreen", { formData });
   };
 
   const reviewBTNSubmirDisabled = (disabledStyle, generalStyle) => {
