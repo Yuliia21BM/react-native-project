@@ -16,6 +16,8 @@ import { Camera } from "expo-camera";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { useState, useEffect, useRef } from "react";
 
+import { uploadPhotoToServer } from "../utils/uploadPhotoToServer";
+
 const initialState = {
   title: "",
   locationDescr: "",
@@ -28,8 +30,6 @@ export default function CreatePostScreen({ navigation }) {
   const [snap, setSnap] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-
-  // const snapRef = useRef();
 
   useEffect(() => {
     setFormData((prevS) => ({ ...prevS, photo: "" }));
@@ -66,9 +66,15 @@ export default function CreatePostScreen({ navigation }) {
     setFormData((prevS) => ({ ...prevS, photo: uri }));
   };
 
-  const onSubmitForm = () => {
+  const onSubmitForm = async () => {
     Keyboard.dismiss();
     onClearForm();
+    const uploadedPhoto = await uploadPhotoToServer(
+      formData.photo,
+      "postPhoto"
+    );
+    console.log("uploadedPhoto", uploadedPhoto);
+    setFormData((prevS) => ({ ...prevS, photo: uploadedPhoto }));
     navigation.navigate("PostScreen", { formData });
   };
 
@@ -87,6 +93,7 @@ export default function CreatePostScreen({ navigation }) {
   const onClearForm = () => {
     setFormData(initialState);
   };
+
   return (
     <ScrollView style={{ backgroundColor: "#fff", flex: 1 }}>
       <View style={styles.container}>
@@ -97,19 +104,7 @@ export default function CreatePostScreen({ navigation }) {
             {hasPermission && (
               <Camera style={{ flex: 1 }} ref={setSnap} type={type}>
                 {formData.photo && (
-                  <View style={{ flex: 1 }}>
-                    <Image
-                      source={{ uri: formData.photo }}
-                      style={previewPhoto}
-                    />
-                    <Text style={{ color: "#FFFFFF", fontSize: 16 }}>
-                      {
-                        // format(
-                        Date.now()
-                        // , "	PPpp")
-                      }
-                    </Text>
-                  </View>
+                  <Image source={{ uri: formData.photo }} style={{ flex: 1 }} />
                 )}
                 <TouchableOpacity
                   style={styles.addPhotoIconWrap}

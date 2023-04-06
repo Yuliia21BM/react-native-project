@@ -22,11 +22,10 @@ import { selectAvatar, selectUserName } from "../redux/auth/authSelectors";
 import PostItem from "../components/PostItem";
 import { useState } from "react";
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen() {
   const avatar = useSelector(selectAvatar);
   const userName = useSelector(selectUserName);
   const dispatch = useDispatch();
-  // const [avatar, setAvatar] = useState(selectedAvatar);
 
   const selectImage = async () => {
     let permissionResult =

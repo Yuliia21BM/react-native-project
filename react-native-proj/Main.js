@@ -3,9 +3,10 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { selectIsCurrentUser } from "./redux/auth/authSelectors";
+import { authStateChanged } from "./redux/auth/authOperations";
 
 import AuthNav from "./authNav";
 import BottomTabsNav from "./bottomTabsNav";
@@ -17,6 +18,11 @@ export default function Main() {
     RobotoMed: require("./assets/fonts/Roboto-Medium.ttf"),
     RobotoBold: require("./assets/fonts/Roboto-Bold.ttf"),
   });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(authStateChanged());
+  }, []);
 
   useEffect(() => {
     async function prepare() {
