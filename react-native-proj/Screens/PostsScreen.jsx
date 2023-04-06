@@ -7,38 +7,29 @@ import {
   Image,
   Text,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   selectAvatar,
   selectUserName,
   selectUserEmail,
 } from "../redux/auth/authSelectors";
+import { selectAllPosts } from "../redux/posts/postsSelectors";
 import defaultPhoto from "../assets/images/default-photo.jpg";
+
+import { getAllPosts } from "../redux/posts/postsOperations";
 
 import PostItem from "../components/PostItem";
 
-export default function PostScreen({ route }) {
+export default function PostScreen() {
   const avatar = useSelector(selectAvatar);
   const userName = useSelector(selectUserName);
   const userEmaill = useSelector(selectUserEmail);
-  const [posts, setPosts] = useState([]);
+  const posts = useSelector(selectAllPosts);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (route.params) {
-      setPosts((prev) => [
-        ...prev,
-        {
-          photo: route.params.formData.photo,
-          name: route.params.formData.title,
-          locationDescr: route.params.formData.locationDescr,
-          location: route.params.formData.location,
-          id: 117,
-          comments: 0,
-          likes: 0,
-        },
-      ]);
-    }
-  }, [route]);
+    dispatch(getAllPosts());
+  }, []);
 
   return (
     <View
@@ -63,7 +54,7 @@ export default function PostScreen({ route }) {
         <FlatList
           data={posts}
           renderItem={({ item }) => <PostItem item={item} />}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.idPost}
         />
       </SafeAreaView>
     </View>

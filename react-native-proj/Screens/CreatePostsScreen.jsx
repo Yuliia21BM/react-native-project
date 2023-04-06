@@ -67,12 +67,11 @@ export default function CreatePostScreen({ navigation }) {
     const { uri } = await snap.takePictureAsync();
     await MediaLibrary.createAssetAsync(uri);
     const uploadedPhoto = await uploadPhotoToServer(uri, "postScreen");
-    console.log(uploadedPhoto);
-    setFormData((prevS) => ({ ...prevS, photo: uri }));
+    setFormData((prevS) => ({ ...prevS, photo: uploadedPhoto }));
   };
 
   const onSubmitForm = () => {
-    // const id = Date.now();
+    const id = Date.now();
     Keyboard.dismiss();
     onClearForm();
     dispatch(
@@ -81,18 +80,12 @@ export default function CreatePostScreen({ navigation }) {
         name: formData.title,
         locationDescr: formData.locationDescr,
         location: formData.location,
-        // id,
+        id,
         comments: 0,
         likes: 0,
       })
     );
-    // const uploadedPhoto = await uploadPhotoToServer(
-    //   formData.photo,
-    //   "postPhoto"
-    // );
-    // console.log("uploadedPhoto", uploadedPhoto);
-    // setFormData((prevS) => ({ ...prevS, photo: uploadedPhoto }));
-    // navigation.navigate("PostScreen", { formData });
+    navigation.navigate("PostScreen");
   };
 
   const reviewBTNSubmirDisabled = (disabledStyle, generalStyle) => {

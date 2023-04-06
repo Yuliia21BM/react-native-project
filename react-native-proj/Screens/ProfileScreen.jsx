@@ -8,13 +8,17 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from "react-native";
+import { selectAllPosts } from "../redux/posts/postsSelectors";
 import * as ImagePicker from "expo-image-picker";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { uploadPhotoToServer } from "../utils/uploadPhotoToServer";
 import { authLogout, authUpdateAvatar } from "../redux/auth/authOperations";
-import { useDispatch } from "react-redux";
+import { getAllPosts } from "../redux/posts/postsOperations";
 
 import { selectAvatar, selectUserName } from "../redux/auth/authSelectors";
 // import defaultPhoto from "../assets/images/default-photo.jpg";
@@ -25,7 +29,12 @@ import { useState } from "react";
 export default function ProfileScreen() {
   const avatar = useSelector(selectAvatar);
   const userName = useSelector(selectUserName);
+  const posts = useSelector(selectAllPosts);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllPosts());
+  }, []);
 
   const selectImage = async () => {
     let permissionResult =
@@ -43,8 +52,8 @@ export default function ProfileScreen() {
     }
 
     const source = pickerResult.assets[0].uri;
-    console.log(source);
-    dispatch(authUpdateAvatar(source));
+    const uploadedPhoto = await uploadPhotoToServer(source, "avatars");
+    dispatch(authUpdateAvatar(uploadedPhoto));
   };
 
   return (
@@ -98,12 +107,12 @@ export default function ProfileScreen() {
               )}
             </View>
             <Text style={styles.title}>{userName}</Text>
-            {/* <FlatList
+            <FlatList
               data={posts}
               renderItem={({ item }) => <PostItem item={item} />}
-              keyExtractor={(item) => item.id}
-              style={{ gap: 34 }}
-            /> */}
+              keyExtractor={(item) => item.idPost}
+              style={{ height: 450 }}
+            />
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>

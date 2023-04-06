@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  posts: [],
+  items: [],
 };
 
 export const postsSlice = createSlice({
@@ -9,5 +9,9 @@ export const postsSlice = createSlice({
   initialState,
   reducers: {
     addPost: (state, { payload }) => {},
+    uploadPosts: (state, { payload }) => {
+      console.log(payload);
+      state.items = payload;
+    },
   },
 });

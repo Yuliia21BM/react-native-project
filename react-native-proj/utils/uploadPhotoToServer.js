@@ -30,26 +30,3 @@ export const uploadPhotoToServer = async (photo, screenName) => {
     console.log(error);
   }
 };
-
-// export const uploadPhotoToServer = async (photo, screenName) => {
-//   const { uri } = await ImageManipulator.manipulateAsync(
-//     photo,
-//     [{ resize: { width: 800 } }],
-//     { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
-//   );
-//   const res = await fetch(uri);
-//   const file = await res.blob();
-//   const uniqueId = Date.now().toString();
-//   const storageRef =
-//     screenName === "createPost"
-//       ? ref(storage, `postsImages/post_${uniqueId}`)
-//       : ref(storage, `avatarPhoto/avatar_${uniqueId}`);
-
-//   try {
-//     await uploadBytes(storageRef, file);
-//     const processedPhoto = await getDownloadURL(storageRef);
-//     return processedPhoto;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };

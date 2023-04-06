@@ -66,8 +66,9 @@ export default function RegistrationScreen({ navigation }) {
     }
 
     const source = pickerResult.assets[0].uri;
-    console.log(source);
-    setFormData((prevS) => ({ ...prevS, avatar: source })); // Set the selected image as the avatar
+    // console.log(source);
+    const uploadedPhoto = await uploadPhotoToServer(source, "avatars");
+    setFormData((prevS) => ({ ...prevS, avatar: uploadedPhoto }));
   };
 
   const onKeyboardHide = () => {
