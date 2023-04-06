@@ -6,9 +6,8 @@ import {
 } from "firebase/auth";
 import { authSlice } from "./authSlice";
 import { auth } from "../../firebase/config";
-import { log } from "react-native-reanimated";
 
-const { logout, updateUserProfile } = authSlice.actions;
+const { logout, updateUserProfile, updateAvatar } = authSlice.actions;
 
 export const authRegistration =
   ({ userName, userEmail, userPassword, avatar }) =>
@@ -45,9 +44,10 @@ export const authLogInUser =
   ({ userEmail, userPassword }) =>
   async (dispatch) => {
     try {
+      const updatedEmail = userEmail.toLowerCase();
       const { user } = await signInWithEmailAndPassword(
         auth,
-        userEmail,
+        updatedEmail,
         userPassword
       );
       console.log(user);
@@ -81,6 +81,17 @@ export const authLogout = () => async (dispatch) => {
     // await AsyncStorage.removeItem("auth_email");
     // await AsyncStorage.removeItem("auth_password");
     // dispatch(postsSlice.actions.reset());
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const authUpdateAvatar = (avatar) => async (dispatch) => {
+  try {
+    await updateProfile(auth.currentUser, {
+      photoURL: avatar,
+    });
+    dispatch(updateAvatar(avatar));
   } catch (error) {
     return error.message;
   }

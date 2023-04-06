@@ -6,17 +6,19 @@ import {
   Platform,
   KeyboardAvoidingView,
   Image,
+  TouchableOpacity,
   FlatList,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { authLogout } from "../redux/auth/authOperations";
+import { authLogout, authUpdateAvatar } from "../redux/auth/authOperations";
 import { useDispatch } from "react-redux";
 
 import { selectAvatar, selectUserName } from "../redux/auth/authSelectors";
-import defaultPhoto from "../assets/images/default-photo.jpg";
-import defaultPage from "../assets/images/default-img.jpg";
+// import defaultPhoto from "../assets/images/default-photo.jpg";
+// import defaultPage from "../assets/images/default-img.jpg";
 import PostItem from "../components/PostItem";
 import { useState } from "react";
 
@@ -24,6 +26,27 @@ export default function ProfileScreen({ navigation }) {
   const avatar = useSelector(selectAvatar);
   const userName = useSelector(selectUserName);
   const dispatch = useDispatch();
+  // const [avatar, setAvatar] = useState(selectedAvatar);
+
+  const selectImage = async () => {
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+
+    if (pickerResult.canceled === true) {
+      return;
+    }
+
+    const source = pickerResult.assets[0].uri;
+    console.log(source);
+    dispatch(authUpdateAvatar(source));
+  };
 
   return (
     <View style={styles.container}>
@@ -49,15 +72,31 @@ export default function ProfileScreen({ navigation }) {
             />
             <View style={styles.photoDef}>
               <Image
-                source={avatar ? { uri: avatar } : defaultPhoto}
+                source={avatar && { uri: avatar }}
                 style={{ width: "100%", height: "100%", borderRadius: 16 }}
               />
-              <AntDesign
-                name="pluscircleo"
-                size={24}
-                color="#BDBDBD"
-                style={styles.addPhotoIcon}
-              />
+              {!avatar ? (
+                <TouchableOpacity
+                  style={styles.addPhotoIcon}
+                  activeOpacity={0.8}
+                  onPress={selectImage}
+                >
+                  <AntDesign name="pluscircleo" size={24} color="#FF6C00" />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.addPhotoIcon}
+                  activeOpacity={0.8}
+                  onPress={() => dispatch(authUpdateAvatar(null))}
+                >
+                  <AntDesign
+                    name="closecircleo"
+                    size={24}
+                    color="#dad9d9"
+                    style={{ backgroundColor: "#fff", borderRadius: 50 }}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
             <Text style={styles.title}>{userName}</Text>
             {/* <FlatList
@@ -114,9 +153,6 @@ const styles = StyleSheet.create({
     right: -12,
     width: 25,
     height: 25,
-    backgroundColor: "#fff",
-    borderRadius: 24 / 2,
-    transform: [{ rotate: "-45deg" }],
   },
   input: {
     fontFamily: "RobotoReg",

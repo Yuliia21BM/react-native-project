@@ -26,5 +26,8 @@ export const authSlice = createSlice({
       state.avatar = null;
       state.isCurrentUser = false;
     },
+    updateAvatar: (state, { payload }) => {
+      state.avatar = payload;
+    },
   },
 });
