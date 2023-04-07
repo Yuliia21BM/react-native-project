@@ -15,6 +15,8 @@ import comentUser from "../assets/images/coment-user.png";
 import { UserComment } from "../components/userComent";
 import { CommentatorComment } from "../components/comentatorComent";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addCommentToPost } from "../redux/posts/postsOperations";
 
 const comments = [
   {
@@ -77,11 +79,35 @@ const comments = [
   },
 ];
 
-export default function CommentsScreen() {
+export default function CommentsScreen({ route }) {
+  const postId = route.params.postId;
+  const photo = route.params.photo;
+  const dispatch = useDispatch();
   const [comment, setComment] = useState("");
+
+  const updateTime = () => {
+    const currentDate = new Date();
+    const options = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: false,
+    };
+    const formattedDate = currentDate.toLocaleDateString("uk-UA", options);
+    return formattedDate;
+  };
 
   const onSubmitComment = () => {
     console.log(comment);
+    const commentTime = updateTime();
+    const commentInfo = {
+      photo,
+      comment,
+      commentTime,
+    };
+    dispatch(addCommentToPost(postId, commentInfo));
     Keyboard.dismiss();
     setComment("");
   };

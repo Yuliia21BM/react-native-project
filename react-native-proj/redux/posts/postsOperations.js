@@ -37,10 +37,19 @@ export const getAllPosts = () => async (dispatch, getState) => {
     querySnapshot.forEach((doc) =>
       allPosts.push({ ...doc.data(), idPost: doc.id })
     );
-    console.log(allPosts);
 
     dispatch(postsSlice.actions.uploadPosts(allPosts));
     return allPosts;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const addCommentToPost = (postId, comment) => async () => {
+  try {
+    const commentRef = collection(db, "posts", postId, "comments");
+    await addDoc(commentRef, comment);
+    console.log("Comment added to post");
   } catch (error) {
     console.log(error.message);
   }

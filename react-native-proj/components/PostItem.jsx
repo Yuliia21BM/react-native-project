@@ -3,6 +3,7 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 export default function PostItem({ item }) {
+  console.log(item);
   const navigations = useNavigation();
   return (
     <View style={styles.container}>
@@ -29,7 +30,12 @@ export default function PostItem({ item }) {
               size={24}
               color="#BDBDBD"
               style={styles.messageIcon}
-              onPress={() => navigations.navigate("Comments")}
+              onPress={() =>
+                navigations.navigate("Comments", {
+                  postId: item.idPost,
+                  photo: item.photo,
+                })
+              }
             />
             <Text
               style={{
