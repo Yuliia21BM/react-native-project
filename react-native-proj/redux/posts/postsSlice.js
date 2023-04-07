@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   items: [],
+  comments: [],
 };
 
 export const postsSlice = createSlice({
@@ -12,6 +13,9 @@ export const postsSlice = createSlice({
     uploadPosts: (state, { payload }) => {
       console.log(payload);
       state.items = payload;
+    },
+    uploadComments: (state, { payload }) => {
+      state.comments = payload;
     },
   },
 });

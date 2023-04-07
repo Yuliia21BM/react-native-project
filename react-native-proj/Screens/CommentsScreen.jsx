@@ -9,14 +9,16 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import defaultPage from "../assets/images/default-img.jpg";
 import comentator from "../assets/images/commentator.png";
 import comentUser from "../assets/images/coment-user.png";
 import { UserComment } from "../components/userComent";
 import { CommentatorComment } from "../components/comentatorComent";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { addCommentToPost } from "../redux/posts/postsOperations";
+import { selectAvatar } from "../redux/auth/authSelectors";
+import { getCommentsByPostId } from "../redux/posts/postsOperations";
 
 const comments = [
   {
@@ -43,47 +45,18 @@ const comments = [
     time: "09 июня, 2020 | 09:14",
     id: 112,
   },
-  {
-    user: {
-      name: "User",
-      email: "yulia@gmail.com",
-      photo: comentator,
-      id: 111,
-    },
-    comment: "Great!",
-    time: "09 июня, 2020 | 08:40",
-    id: 113,
-  },
-  {
-    user: {
-      name: "Yulia",
-      email: "yulia@gmail.com",
-      photo: comentUser,
-      id: 112,
-    },
-    comment:
-      "A fast 50mm like f1.8 would help with the bokeh. I’ve been using primes as they tend to get a bit sharper images.",
-    time: "09 июня, 2020 | 09:14",
-    id: 115,
-  },
-  {
-    user: {
-      name: "User",
-      email: "yulia@gmail.com",
-      photo: comentator,
-      id: 111,
-    },
-    comment: "Great!",
-    time: "09 июня, 2020 | 08:40",
-    id: 114,
-  },
 ];
 
 export default function CommentsScreen({ route }) {
+  const avatar = useSelector(selectAvatar);
   const postId = route.params.postId;
   const photo = route.params.photo;
+  const [comment, setComment] = useState();
   const dispatch = useDispatch();
-  const [comment, setComment] = useState("");
+
+  useEffect(() => {
+    dispatch(getCommentsByPostId(postId));
+  }, [postId]);
 
   const updateTime = () => {
     const currentDate = new Date();
@@ -103,9 +76,9 @@ export default function CommentsScreen({ route }) {
     console.log(comment);
     const commentTime = updateTime();
     const commentInfo = {
-      photo,
       comment,
       commentTime,
+      photo: avatar,
     };
     dispatch(addCommentToPost(postId, commentInfo));
     Keyboard.dismiss();
@@ -115,7 +88,7 @@ export default function CommentsScreen({ route }) {
   return (
     <View style={{ backgroundColor: "#fff", flex: 1 }}>
       <View style={styles.container}>
-        <Image source={defaultPage} style={styles.photo} />
+        <Image source={{ uri: photo }} style={styles.photo} />
         <FlatList
           data={comments}
           renderItem={({ item }) =>

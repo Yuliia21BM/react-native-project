@@ -45,11 +45,32 @@ export const getAllPosts = () => async (dispatch, getState) => {
   }
 };
 
-export const addCommentToPost = (postId, comment) => async () => {
+export const addCommentToPost = (postId, comment) => async (_, getState) => {
+  const { userID } = getState().auth;
   try {
     const commentRef = collection(db, "posts", postId, "comments");
-    await addDoc(commentRef, comment);
+    await addDoc(commentRef, {
+      ...comment,
+      userId: userID,
+    });
     console.log("Comment added to post");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const getCommentsByPostId = (postId) => async (_, getState) => {
+  const { userID } = getState().auth;
+  try {
+    const commentsRef = collection(db, "posts", postId, "comments");
+    const q = query(commentsRef);
+    const commentsSnapshot = await getDocs(q);
+    const comments = commentsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log(comments);
+    // return comments;
   } catch (error) {
     console.log(error.message);
   }
