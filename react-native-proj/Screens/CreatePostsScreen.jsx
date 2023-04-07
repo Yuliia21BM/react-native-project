@@ -14,11 +14,10 @@ import {
 } from "react-native";
 import { Camera } from "expo-camera";
 import { FontAwesome, Feather } from "@expo/vector-icons";
-import { useState, useEffect, useRef } from "react";
-import { uploadPostToStore } from "../redux/posts/postsOperations";
-
-import { uploadPhotoToServer } from "../utils/uploadPhotoToServer";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { uploadPostToStore, getAllPosts } from "../redux/posts/postsOperations";
+import { uploadPhotoToServer } from "../utils/uploadPhotoToServer";
 
 const initialState = {
   title: "",
@@ -85,6 +84,7 @@ export default function CreatePostScreen({ navigation }) {
         likes: 0,
       })
     );
+    dispatch(getAllPosts());
     navigation.navigate("PostScreen");
   };
 
