@@ -5,9 +5,9 @@ export const UserComment = ({ comment }) => {
     <View style={styles.container}>
       <View style={styles.textWrap}>
         <Text style={styles.commentText}>{comment.comment}</Text>
-        <Text style={styles.commentTime}>{comment.time}</Text>
+        <Text style={styles.commentTime}>{comment.commentTime}</Text>
       </View>
-      <Image source={comment.user.photo} style={styles.image} />
+      <Image source={{ uri: comment.photo }} style={styles.image} />
     </View>
   );
 };

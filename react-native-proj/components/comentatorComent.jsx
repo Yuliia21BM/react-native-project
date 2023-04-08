@@ -3,10 +3,10 @@ import { Image, Text, View, StyleSheet } from "react-native";
 export const CommentatorComment = ({ comment }) => {
   return (
     <View style={styles.container}>
-      <Image source={comment.user.photo} style={styles.image} />
+      <Image source={{ uri: comment.photo }} style={styles.image} />
       <View style={styles.textWrap}>
         <Text style={styles.commentText}>{comment.comment}</Text>
-        <Text style={styles.commentTime}>{comment.time}</Text>
+        <Text style={styles.commentTime}>{comment.commentTime}</Text>
       </View>
     </View>
   );

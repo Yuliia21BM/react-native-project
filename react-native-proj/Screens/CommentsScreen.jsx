@@ -17,40 +17,16 @@ import comentUser from "../assets/images/coment-user.png";
 import { UserComment } from "../components/userComent";
 import { CommentatorComment } from "../components/comentatorComent";
 import { addCommentToPost } from "../redux/posts/postsOperations";
-import { selectAvatar } from "../redux/auth/authSelectors";
+import { selectAvatar, selectUserId } from "../redux/auth/authSelectors";
 import { getCommentsByPostId } from "../redux/posts/postsOperations";
-
-const comments = [
-  {
-    user: {
-      name: "User",
-      email: "yulia@gmail.com",
-      photo: comentator,
-      id: 111,
-    },
-    comment:
-      "Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!",
-    time: "09 июня, 2020 | 08:40",
-    id: 111,
-  },
-  {
-    user: {
-      name: "Yulia",
-      email: "yulia@gmail.com",
-      photo: comentUser,
-      id: 112,
-    },
-    comment:
-      "A fast 50mm like f1.8 would help with the bokeh. I’ve been using primes as they tend to get a bit sharper images.",
-    time: "09 июня, 2020 | 09:14",
-    id: 112,
-  },
-];
+import { selectComments } from "../redux/posts/postsSelectors";
 
 export default function CommentsScreen({ route }) {
+  const currentUserId = useSelector(selectUserId);
   const avatar = useSelector(selectAvatar);
   const postId = route.params.postId;
   const photo = route.params.photo;
+  const comments = useSelector(selectComments);
   const [comment, setComment] = useState();
   const dispatch = useDispatch();
 
@@ -83,6 +59,7 @@ export default function CommentsScreen({ route }) {
     dispatch(addCommentToPost(postId, commentInfo));
     Keyboard.dismiss();
     setComment("");
+    dispatch(getCommentsByPostId(postId));
   };
 
   return (
@@ -92,7 +69,7 @@ export default function CommentsScreen({ route }) {
         <FlatList
           data={comments}
           renderItem={({ item }) =>
-            item.user.id === 112 ? (
+            item.userID === currentUserId ? (
               <UserComment comment={item} />
             ) : (
               <CommentatorComment comment={item} />

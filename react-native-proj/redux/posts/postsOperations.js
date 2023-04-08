@@ -59,7 +59,7 @@ export const addCommentToPost = (postId, comment) => async (_, getState) => {
   }
 };
 
-export const getCommentsByPostId = (postId) => async (_, getState) => {
+export const getCommentsByPostId = (postId) => async (dispatch, getState) => {
   const { userID } = getState().auth;
   try {
     const commentsRef = collection(db, "posts", postId, "comments");
@@ -70,6 +70,7 @@ export const getCommentsByPostId = (postId) => async (_, getState) => {
       ...doc.data(),
     }));
     console.log(comments);
+    dispatch(postsSlice.actions.uploadComments(comments));
     // return comments;
   } catch (error) {
     console.log(error.message);
