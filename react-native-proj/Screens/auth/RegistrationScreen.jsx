@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
 
 import { authRegistration } from "../../redux/auth/authOperations";
+import { uploadPhotoToServer } from "../../utils/uploadPhotoToServer";
 
 const initialState = {
   userEmail: "",

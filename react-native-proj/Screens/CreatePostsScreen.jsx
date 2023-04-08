@@ -1,5 +1,7 @@
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
+import * as ImagePicker from "expo-image-picker";
+
 import {
   View,
   StyleSheet,
@@ -61,6 +63,26 @@ export default function CreatePostScreen({ navigation }) {
       }));
     })();
   }, []);
+
+  const selectImage = async () => {
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+
+    if (pickerResult.canceled === true) {
+      return;
+    }
+
+    const source = pickerResult.assets[0].uri;
+    const uploadedPhoto = await uploadPhotoToServer(source, "avatars");
+    setFormData((prevS) => ({ ...prevS, photo: uploadedPhoto }));
+  };
 
   const takeSnap = async () => {
     const { uri } = await snap.takePictureAsync();
@@ -140,7 +162,11 @@ export default function CreatePostScreen({ navigation }) {
               </Camera>
             )}
           </View>
-          <TouchableOpacity style={{ marginBottom: 48 }} activeOpacity={0.8}>
+          <TouchableOpacity
+            style={{ marginBottom: 48 }}
+            activeOpacity={0.8}
+            onPress={() => selectImage()}
+          >
             <Text style={styles.text}>Upload photo</Text>
           </TouchableOpacity>
           <View style={{ marginBottom: 32 }}>
