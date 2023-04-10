@@ -4,16 +4,12 @@ import {
   Image,
   FlatList,
   TextInput,
-  KeyboardAvoidingView,
   Keyboard,
   TouchableOpacity,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import defaultPage from "../assets/images/default-img.jpg";
-import comentator from "../assets/images/commentator.png";
-import comentUser from "../assets/images/coment-user.png";
 import { UserComment } from "../components/userComent";
 import { CommentatorComment } from "../components/comentatorComent";
 import { addCommentToPost } from "../redux/posts/postsOperations";
@@ -29,6 +25,9 @@ export default function CommentsScreen({ route }) {
   const comments = useSelector(selectComments);
   const [comment, setComment] = useState();
   const dispatch = useDispatch();
+
+  console.log("currentUserId", currentUserId);
+  console.log(comments);
 
   useEffect(() => {
     dispatch(getCommentsByPostId(postId));
@@ -49,7 +48,6 @@ export default function CommentsScreen({ route }) {
   };
 
   const onSubmitComment = () => {
-    console.log(comment);
     const commentTime = updateTime();
     const commentInfo = {
       comment,
@@ -69,7 +67,7 @@ export default function CommentsScreen({ route }) {
         <FlatList
           data={comments}
           renderItem={({ item }) =>
-            item.userID === currentUserId ? (
+            item.userId === currentUserId ? (
               <UserComment comment={item} />
             ) : (
               <CommentatorComment comment={item} />

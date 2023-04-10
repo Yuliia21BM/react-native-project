@@ -13,7 +13,7 @@ import { db } from "../../firebase/config";
 
 import { postsSlice } from "./postsSlice";
 
-const { updateIsLoading, updateLikes } = postsSlice.actions;
+const { updateIsLoading, incrementLikes, decrementLikes } = postsSlice.actions;
 
 export const uploadPostToStore = (post) => async (_, getState) => {
   const { userID } = getState().auth;
@@ -134,10 +134,12 @@ export const toggleLike = (postId) => async (dispatch, getState) => {
         // User hasn't liked the post, add the like
         likes.push(userID);
         await setDoc(postRef, { likes }, { merge: true });
+        dispatch(incrementLikes(postId, increment));
       } else {
         // User has liked the post, remove the like
         likes.splice(index, 1);
         await setDoc(postRef, { likes }, { merge: true });
+        dispatch(decrementLikes(postId, decrement));
       }
     } else {
       console.log("Post does not exist");
