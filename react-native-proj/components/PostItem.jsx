@@ -3,7 +3,6 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 export default function PostItem({ item }) {
-  console.log(item);
   const navigations = useNavigation();
   return (
     <View style={styles.container}>

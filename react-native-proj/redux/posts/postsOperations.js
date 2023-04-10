@@ -7,12 +7,13 @@ import {
   query,
   where,
   doc,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
 import { postsSlice } from "./postsSlice";
 
-const { updateIsLoading } = postsSlice.actions;
+const { updateIsLoading, updateLikes } = postsSlice.actions;
 
 export const uploadPostToStore = (post) => async (_, getState) => {
   const { userID } = getState().auth;
@@ -26,7 +27,7 @@ export const uploadPostToStore = (post) => async (_, getState) => {
   }
 };
 
-export const getAllPosts = () => async (dispatch, getState) => {
+export const getOwnPosts = () => async (dispatch, getState) => {
   const { userID } = getState().auth;
 
   try {
@@ -39,6 +40,41 @@ export const getAllPosts = () => async (dispatch, getState) => {
       allPosts.push({ ...doc.data(), idPost: doc.id })
     );
 
+    dispatch(postsSlice.actions.uploadownPosts(allPosts));
+    dispatch(updateIsLoading(false));
+    return allPosts;
+  } catch (error) {
+    console.log(error.message);
+    dispatch(updateIsLoading(false));
+  }
+};
+
+export const getAllPosts = () => async (dispatch, getState) => {
+  try {
+    dispatch(updateIsLoading(true));
+    const q = query(collection(db, "posts"));
+    const querySnapshot = await getDocs(q);
+
+    const allPosts = [];
+    for (const doc of querySnapshot.docs) {
+      const postData = { ...doc.data(), idPost: doc.id };
+
+      const commentsSnapshot = await getDocs(
+        collection(db, "posts", postData.idPost, "comments")
+      );
+      const commentCount = commentsSnapshot.size;
+
+      const likesSnapshot = await getDocs(
+        collection(db, "posts", postData.idPost, "likes")
+      );
+      const likesCount = likesSnapshot.size;
+
+      await updateDoc(doc.ref, { comments: commentCount });
+      await updateDoc(doc.ref, { likes: likesCount });
+
+      allPosts.push({ ...postData, comments: commentCount, likes: likesCount });
+    }
+
     dispatch(postsSlice.actions.uploadPosts(allPosts));
     dispatch(updateIsLoading(false));
     return allPosts;
@@ -48,22 +84,23 @@ export const getAllPosts = () => async (dispatch, getState) => {
   }
 };
 
-export const addCommentToPost = (postId, comment) => async (_, getState) => {
-  const { userID } = getState().auth;
-  try {
-    const commentRef = collection(db, "posts", postId, "comments");
-    await addDoc(commentRef, {
-      ...comment,
-      userId: userID,
-    });
-    console.log("Comment added to post");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+export const addCommentToPost =
+  (postId, comment) => async (dispatch, getState) => {
+    const { userID } = getState().auth;
+    try {
+      const commentRef = collection(db, "posts", postId, "comments");
+      await addDoc(commentRef, {
+        ...comment,
+        userId: userID,
+      });
+      dispatch(getAllPosts());
+      console.log("Comment added to post");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
 export const getCommentsByPostId = (postId) => async (dispatch, getState) => {
-  const { userID } = getState().auth;
   try {
     const commentsRef = collection(db, "posts", postId, "comments");
     const q = query(commentsRef);
@@ -72,10 +109,40 @@ export const getCommentsByPostId = (postId) => async (dispatch, getState) => {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log(comments);
     dispatch(postsSlice.actions.uploadComments(comments));
     // return comments;
   } catch (error) {
     console.log(error.message);
+  }
+};
+
+export const toggleLike = (postId) => async (dispatch, getState) => {
+  const { userID } = getState().auth;
+  const postRef = doc(db, "posts", postId);
+
+  try {
+    const postDoc = await getDoc(postRef);
+
+    if (postDoc.exists()) {
+      const post = postDoc.data();
+      const likes = post.likes || [];
+
+      // Check if the user has already liked the post
+      const index = likes.indexOf(userID);
+
+      if (index === -1) {
+        // User hasn't liked the post, add the like
+        likes.push(userID);
+        await setDoc(postRef, { likes }, { merge: true });
+      } else {
+        // User has liked the post, remove the like
+        likes.splice(index, 1);
+        await setDoc(postRef, { likes }, { merge: true });
+      }
+    } else {
+      console.log("Post does not exist");
+    }
+  } catch (error) {
+    console.log(error);
   }
 };

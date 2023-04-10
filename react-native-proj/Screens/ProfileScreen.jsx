@@ -10,7 +10,7 @@ import {
   FlatList,
 } from "react-native";
 import {
-  selectAllPosts,
+  selectOwnPosts,
   selectisLoadingPosts,
 } from "../redux/posts/postsSelectors";
 import * as ImagePicker from "expo-image-picker";
@@ -20,7 +20,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { uploadPhotoToServer } from "../utils/uploadPhotoToServer";
 import { authLogout, authUpdateAvatar } from "../redux/auth/authOperations";
-import { getAllPosts } from "../redux/posts/postsOperations";
+import { getOwnPosts } from "../redux/posts/postsOperations";
 import { selectAvatar, selectUserName } from "../redux/auth/authSelectors";
 import PostItem from "../components/PostItem";
 import LoaderScreen from "./LoaderSrceen";
@@ -28,12 +28,12 @@ import LoaderScreen from "./LoaderSrceen";
 export default function ProfileScreen() {
   const avatar = useSelector(selectAvatar);
   const userName = useSelector(selectUserName);
-  const posts = useSelector(selectAllPosts);
+  const posts = useSelector(selectOwnPosts);
   const isLoadingPosts = useSelector(selectisLoadingPosts);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllPosts());
+    dispatch(getOwnPosts());
   }, []);
 
   const selectImage = async () => {
