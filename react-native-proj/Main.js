@@ -5,14 +5,19 @@ import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
-import { selectIsCurrentUser } from "./redux/auth/authSelectors";
+import {
+  selectIsCurrentUser,
+  selectisLoading,
+} from "./redux/auth/authSelectors";
 import { authStateChanged } from "./redux/auth/authOperations";
 
 import AuthNav from "./authNav";
 import BottomTabsNav from "./bottomTabsNav";
+import LoaderScreen from "./Screens/LoaderSrceen";
 
 export default function Main() {
   const isCurrentUser = useSelector(selectIsCurrentUser);
+  const isLoading = useSelector(selectisLoading);
   const [fontsLoaded] = useFonts({
     RobotoReg: require("./assets/fonts/Roboto-Regular.ttf"),
     RobotoMed: require("./assets/fonts/Roboto-Medium.ttf"),
@@ -39,6 +44,9 @@ export default function Main() {
     );
   } else {
     SplashScreen.hideAsync();
+  }
+  if (isLoading) {
+    return <LoaderScreen iconSize={70} />;
   }
   return (
     <NavigationContainer>

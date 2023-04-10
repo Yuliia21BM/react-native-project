@@ -3,18 +3,19 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   signOut,
-  onAuthStateChanged,
 } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authSlice } from "./authSlice";
 import { auth } from "../../firebase/config";
 
-const { logout, updateUserProfile, updateAvatar } = authSlice.actions;
+const { logout, updateUserProfile, updateAvatar, updateIsLoading } =
+  authSlice.actions;
 
 export const authRegistration =
   ({ userName, userEmail, userPassword, avatar }) =>
   async (dispatch) => {
     try {
+      dispatch(updateIsLoading(true));
       const updatedEmail = userEmail.toLowerCase();
       await createUserWithEmailAndPassword(auth, updatedEmail, userPassword);
       await updateProfile(auth.currentUser, {
@@ -36,8 +37,10 @@ export const authRegistration =
           isCurrentUser: true,
         })
       );
+      dispatch(updateIsLoading(false));
     } catch (error) {
       console.log(error.message);
+      dispatch(updateIsLoading(false));
       return error.message;
     }
   };
@@ -46,6 +49,7 @@ export const authLogInUser =
   ({ userEmail, userPassword }) =>
   async (dispatch) => {
     try {
+      dispatch(updateIsLoading(true));
       const updatedEmail = userEmail.toLowerCase();
       const { user } = await signInWithEmailAndPassword(
         auth,
@@ -68,22 +72,26 @@ export const authLogInUser =
           isCurrentUser: true,
         })
       );
+      dispatch(updateIsLoading(false));
 
       return { user };
     } catch (error) {
       console.error(error);
+      dispatch(updateIsLoading(false));
       return error.message;
     }
   };
 
 export const authLogout = () => async (dispatch) => {
   try {
+    dispatch(updateIsLoading(true));
     await signOut(auth);
     dispatch(logout());
     await AsyncStorage.removeItem("auth_email");
     await AsyncStorage.removeItem("auth_password");
-    // dispatch(postsSlice.actions.reset());
+    dispatch(updateIsLoading(false));
   } catch (error) {
+    dispatch(updateIsLoading(false));
     return error.message;
   }
 };
@@ -98,12 +106,15 @@ export const authStateChanged = () => async (dispatch) => {
     if (userData.userEmail) {
       try {
         await dispatch(authLogInUser(userData));
+        dispatch(updateIsLoading(false));
       } catch (error) {
         console.log("Sorry, this user was deleted");
+        dispatch(updateIsLoading(false));
         return error.message;
       }
     }
   } catch (error) {
+    dispatch(updateIsLoading(false));
     return error.message;
   }
 };

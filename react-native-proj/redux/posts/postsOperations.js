@@ -12,7 +12,7 @@ import { db } from "../../firebase/config";
 
 import { postsSlice } from "./postsSlice";
 
-// const { uploadPosts } = postsSlice.actions;
+const { updateIsLoading } = postsSlice.actions;
 
 export const uploadPostToStore = (post) => async (_, getState) => {
   const { userID } = getState().auth;
@@ -30,6 +30,7 @@ export const getAllPosts = () => async (dispatch, getState) => {
   const { userID } = getState().auth;
 
   try {
+    dispatch(updateIsLoading(true));
     const q = query(collection(db, "posts"), where("userId", "==", userID));
     const querySnapshot = await getDocs(q);
 
@@ -39,9 +40,11 @@ export const getAllPosts = () => async (dispatch, getState) => {
     );
 
     dispatch(postsSlice.actions.uploadPosts(allPosts));
+    dispatch(updateIsLoading(false));
     return allPosts;
   } catch (error) {
     console.log(error.message);
+    dispatch(updateIsLoading(false));
   }
 };
 

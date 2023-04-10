@@ -13,8 +13,12 @@ import {
   selectUserName,
   selectUserEmail,
 } from "../redux/auth/authSelectors";
-import { selectAllPosts } from "../redux/posts/postsSelectors";
+import {
+  selectAllPosts,
+  selectisLoadingPosts,
+} from "../redux/posts/postsSelectors";
 import defaultPhoto from "../assets/images/default-photo.jpg";
+import LoaderScreen from "./LoaderSrceen";
 
 import { getAllPosts } from "../redux/posts/postsOperations";
 
@@ -25,6 +29,7 @@ export default function PostScreen() {
   const userName = useSelector(selectUserName);
   const userEmaill = useSelector(selectUserEmail);
   const posts = useSelector(selectAllPosts);
+  const isLoadingPosts = useSelector(selectisLoadingPosts);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,13 +55,17 @@ export default function PostScreen() {
           <Text style={styles.userEmail}>{userEmaill}</Text>
         </View>
       </View>
-      <SafeAreaView>
-        <FlatList
-          data={posts}
-          renderItem={({ item }) => <PostItem item={item} />}
-          keyExtractor={(item) => item.idPost}
-        />
-      </SafeAreaView>
+      {isLoadingPosts ? (
+        <LoaderScreen iconSize={60} />
+      ) : (
+        <SafeAreaView>
+          <FlatList
+            data={posts}
+            renderItem={({ item }) => <PostItem item={item} />}
+            keyExtractor={(item) => item.idPost}
+          />
+        </SafeAreaView>
+      )}
     </View>
   );
 }

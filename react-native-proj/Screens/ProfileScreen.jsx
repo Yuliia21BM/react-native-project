@@ -8,9 +8,11 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  ScrollView,
 } from "react-native";
-import { selectAllPosts } from "../redux/posts/postsSelectors";
+import {
+  selectAllPosts,
+  selectisLoadingPosts,
+} from "../redux/posts/postsSelectors";
 import * as ImagePicker from "expo-image-picker";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
@@ -19,17 +21,15 @@ import { useEffect } from "react";
 import { uploadPhotoToServer } from "../utils/uploadPhotoToServer";
 import { authLogout, authUpdateAvatar } from "../redux/auth/authOperations";
 import { getAllPosts } from "../redux/posts/postsOperations";
-
 import { selectAvatar, selectUserName } from "../redux/auth/authSelectors";
-// import defaultPhoto from "../assets/images/default-photo.jpg";
-// import defaultPage from "../assets/images/default-img.jpg";
 import PostItem from "../components/PostItem";
-import { useState } from "react";
+import LoaderScreen from "./LoaderSrceen";
 
 export default function ProfileScreen() {
   const avatar = useSelector(selectAvatar);
   const userName = useSelector(selectUserName);
   const posts = useSelector(selectAllPosts);
+  const isLoadingPosts = useSelector(selectisLoadingPosts);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -107,12 +107,18 @@ export default function ProfileScreen() {
               )}
             </View>
             <Text style={styles.title}>{userName}</Text>
-            <FlatList
-              data={posts}
-              renderItem={({ item }) => <PostItem item={item} />}
-              keyExtractor={(item) => item.idPost}
-              style={{ height: 450 }}
-            />
+            {isLoadingPosts ? (
+              <View style={{ height: 400 }}>
+                <LoaderScreen iconSize={60} />
+              </View>
+            ) : (
+              <FlatList
+                data={posts}
+                renderItem={({ item }) => <PostItem item={item} />}
+                keyExtractor={(item) => item.idPost}
+                style={{ height: 450 }}
+              />
+            )}
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>
