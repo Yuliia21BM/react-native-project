@@ -6,7 +6,7 @@ const initialState = {
   userEmail: null,
   avatar: null,
   isCurrentUser: false,
-  isLoading: true,
+  isLoading: false,
   isLoadingPhotoToServer: false,
 };
 
