@@ -64,7 +64,6 @@ export default function PostItem({ item }) {
               color={item?.likesCounter === 0 ? "#BDBDBD" : "#FF6C00"}
               onPress={() => {
                 dispatch(toggleLike(item.idPost));
-                console.log(item);
               }}
             />
             <Text

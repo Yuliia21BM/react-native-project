@@ -73,7 +73,6 @@ export default function RegistrationScreen({ navigation }) {
     }
 
     const source = pickerResult.assets[0].uri;
-    // console.log(source);
     const uploadedPhoto = await uploadPhotoToServer(source, "avatars");
     setFormData((prevS) => ({ ...prevS, avatar: uploadedPhoto }));
     dispatch(updateIsLoadingPhotoToServer(false));
@@ -85,7 +84,6 @@ export default function RegistrationScreen({ navigation }) {
   };
 
   const onSubmitForm = () => {
-    console.log("submit");
     dispatch(authRegistration(formData));
     onKeyboardHide();
     setFormData(initialState);
@@ -104,7 +102,7 @@ export default function RegistrationScreen({ navigation }) {
       <View style={styles.container}>
         <ImageBackground
           style={styles.imageBG}
-          source={require("../../assets/bg-image.jpg")}
+          source={require("../../img/bg-image.jpg")}
         >
           <KeyboardAvoidingView
             keyboardVerticalOffset={-90}

@@ -70,7 +70,7 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.container}>
         <ImageBackground
           style={styles.imageBG}
-          source={require("../../assets/bg-image.jpg")}
+          source={require("../../img/bg-image.jpg")}
         >
           <KeyboardAvoidingView
             keyboardVerticalOffset={-90}

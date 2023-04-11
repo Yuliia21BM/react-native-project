@@ -17,7 +17,6 @@ import {
   selectAllPosts,
   selectisLoadingPosts,
 } from "../redux/posts/postsSelectors";
-import defaultPhoto from "../assets/images/default-photo.jpg";
 import LoaderScreen from "./LoaderSrceen";
 
 import { getAllPosts } from "../redux/posts/postsOperations";

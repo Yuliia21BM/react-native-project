@@ -8,7 +8,6 @@ const MapScreen = ({ route }) => {
   const [photo, setPhoto] = useState("");
   useEffect(() => {
     if (route.params) {
-      console.log(route.params);
       setlocationDescr(route.params.locationDescr);
       setLocation(route.params.location);
       setPhoto(route.params.photo);

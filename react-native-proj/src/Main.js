@@ -19,9 +19,9 @@ export default function Main() {
   const isCurrentUser = useSelector(selectIsCurrentUser);
   const isLoading = useSelector(selectisLoading);
   const [fontsLoaded] = useFonts({
-    RobotoReg: require("./assets/fonts/Roboto-Regular.ttf"),
-    RobotoMed: require("./assets/fonts/Roboto-Medium.ttf"),
-    RobotoBold: require("./assets/fonts/Roboto-Bold.ttf"),
+    RobotoReg: require("../assets/fonts/Roboto-Regular.ttf"),
+    RobotoMed: require("../assets/fonts/Roboto-Medium.ttf"),
+    RobotoBold: require("../assets/fonts/Roboto-Bold.ttf"),
   });
   const dispatch = useDispatch();
 

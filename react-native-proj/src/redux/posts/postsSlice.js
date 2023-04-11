@@ -15,7 +15,6 @@ export const postsSlice = createSlice({
       state.items = payload;
     },
     uploadownPosts: (state, { payload }) => {
-      console.log(payload);
       state.ownItems = payload;
     },
     uploadComments: (state, { payload }) => {

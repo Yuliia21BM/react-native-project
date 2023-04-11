@@ -26,9 +26,6 @@ export default function CommentsScreen({ route }) {
   const [comment, setComment] = useState();
   const dispatch = useDispatch();
 
-  console.log("currentUserId", currentUserId);
-  console.log(comments);
-
   useEffect(() => {
     dispatch(getCommentsByPostId(postId));
   }, [postId]);

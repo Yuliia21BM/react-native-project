@@ -56,7 +56,6 @@ export const authLogInUser =
         updatedEmail,
         userPassword
       );
-      console.log(user);
 
       const { displayName, email, photoURL, uid } = user;
 

@@ -115,11 +115,9 @@ export const getCommentsByPostId = (postId) => async (dispatch, getState) => {
 export const toggleLike = (postId) => async (dispatch, getState) => {
   const { userID } = getState().auth;
   const postRef = doc(db, "posts", postId);
-  console.log("like");
 
   try {
     const postDoc = await getDoc(postRef);
-    console.log(postDoc);
 
     if (postDoc.exists()) {
       const post = postDoc.data();
@@ -133,7 +131,6 @@ export const toggleLike = (postId) => async (dispatch, getState) => {
         likes.push(userID);
         await setDoc(postRef, { likes }, { merge: true });
         await setDoc(postRef, { likesCounter: likes.length }, { merge: true });
-        console.log(likes.length);
         dispatch(incrementLikes({ postId, likesCounter: likes.length }));
       } else {
         // User has liked the post, remove the like
