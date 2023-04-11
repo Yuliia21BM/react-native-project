@@ -24,12 +24,16 @@ import { getOwnPosts } from "../redux/posts/postsOperations";
 import { selectAvatar, selectUserName } from "../redux/auth/authSelectors";
 import PostItem from "../components/PostItem";
 import LoaderScreen from "./LoaderSrceen";
+import { LoaderPhoto } from "../components/loaderPhoto";
+import { selectIsLoadingPhotoToServer } from "../redux/auth/authSelectors";
+import { updateIsLoadingPhotoToServer } from "../redux/auth/authSlice";
 
 export default function ProfileScreen() {
   const avatar = useSelector(selectAvatar);
   const userName = useSelector(selectUserName);
   const posts = useSelector(selectOwnPosts);
   const isLoadingPosts = useSelector(selectisLoadingPosts);
+  const isLoadingPhotoToServer = useSelector(selectIsLoadingPhotoToServer);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,6 +50,7 @@ export default function ProfileScreen() {
     }
 
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    dispatch(updateIsLoadingPhotoToServer(true));
 
     if (pickerResult.canceled === true) {
       return;
@@ -54,6 +59,7 @@ export default function ProfileScreen() {
     const source = pickerResult.assets[0].uri;
     const uploadedPhoto = await uploadPhotoToServer(source, "avatars");
     dispatch(authUpdateAvatar(uploadedPhoto));
+    dispatch(updateIsLoadingPhotoToServer(false));
   };
 
   return (
@@ -79,6 +85,7 @@ export default function ProfileScreen() {
               onPress={() => dispatch(authLogout())}
             />
             <View style={styles.photoDef}>
+              {isLoadingPhotoToServer && <LoaderPhoto iconSize={25} />}
               <Image
                 source={avatar && { uri: avatar }}
                 style={{ width: "100%", height: "100%", borderRadius: 16 }}
