@@ -64,15 +64,12 @@ export const getAllPosts = () => async (dispatch, getState) => {
       );
       const commentCount = commentsSnapshot.size;
 
-      const likesSnapshot = await getDocs(
-        collection(db, "posts", postData.idPost, "likes")
-      );
-      const likesCount = likesSnapshot.size;
-
       await updateDoc(doc.ref, { comments: commentCount });
-      await updateDoc(doc.ref, { likes: likesCount });
 
-      allPosts.push({ ...postData, comments: commentCount, likes: likesCount });
+      allPosts.push({
+        ...postData,
+        comments: commentCount,
+      });
     }
 
     dispatch(postsSlice.actions.uploadPosts(allPosts));
@@ -110,7 +107,6 @@ export const getCommentsByPostId = (postId) => async (dispatch, getState) => {
       ...doc.data(),
     }));
     dispatch(postsSlice.actions.uploadComments(comments));
-    // return comments;
   } catch (error) {
     console.log(error.message);
   }
@@ -119,9 +115,11 @@ export const getCommentsByPostId = (postId) => async (dispatch, getState) => {
 export const toggleLike = (postId) => async (dispatch, getState) => {
   const { userID } = getState().auth;
   const postRef = doc(db, "posts", postId);
+  console.log("like");
 
   try {
     const postDoc = await getDoc(postRef);
+    console.log(postDoc);
 
     if (postDoc.exists()) {
       const post = postDoc.data();
@@ -134,12 +132,15 @@ export const toggleLike = (postId) => async (dispatch, getState) => {
         // User hasn't liked the post, add the like
         likes.push(userID);
         await setDoc(postRef, { likes }, { merge: true });
-        dispatch(incrementLikes(postId, increment));
+        await setDoc(postRef, { likesCounter: likes.length }, { merge: true });
+        console.log(likes.length);
+        dispatch(incrementLikes({ postId, likesCounter: likes.length }));
       } else {
         // User has liked the post, remove the like
         likes.splice(index, 1);
         await setDoc(postRef, { likes }, { merge: true });
-        dispatch(decrementLikes(postId, decrement));
+        await setDoc(postRef, { likesCounter: likes.length }, { merge: true });
+        dispatch(decrementLikes({ postId, likesCounter: likes.length }));
       }
     } else {
       console.log("Post does not exist");

@@ -24,29 +24,20 @@ export const postsSlice = createSlice({
     updateIsLoading: (state, { payload }) => {
       state.isLoading = payload;
     },
-    // updateLikes: (state, { payload }) => {
-    //   const { id, likes } = payload;
-    //   const updatedPosts = state.posts.map((post) => {
-    //     if (post.idPost === id) {
-    //       return { ...post, likes };
-    //     }
-    //     return post;
-    //   });
-    // },
     incrementLikes: (state, { payload }) => {
-      const { id } = payload;
-      const updatedPosts = state.posts.map((post) => {
-        if (post.idPost === id) {
-          return { ...post, likes: (post.likes += 1) };
+      const { postId, likesCounter } = payload;
+      state.items = state.items.map((post) => {
+        if (post.idPost === postId) {
+          return { ...post, likesCounter };
         }
         return post;
       });
     },
     decrementLikes: (state, { payload }) => {
-      const { id } = payload;
-      const updatedPosts = state.posts.map((post) => {
-        if (post.idPost === id) {
-          return { ...post, likes: (post.likes += 1) };
+      const { postId, likesCounter } = payload;
+      state.items = state.items.map((post) => {
+        if (post.idPost === postId) {
+          return { ...post, likesCounter };
         }
         return post;
       });

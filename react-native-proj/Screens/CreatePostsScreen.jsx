@@ -103,7 +103,8 @@ export default function CreatePostScreen({ navigation }) {
         location: formData.location,
         id,
         comments: 0,
-        likes: 0,
+        likes: [],
+        likesCounter: 0,
       })
     );
     dispatch(getAllPosts());

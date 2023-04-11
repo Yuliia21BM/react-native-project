@@ -1,9 +1,13 @@
 import { Image, View, Text, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+
+import { toggleLike } from "../redux/posts/postsOperations";
 
 export default function PostItem({ item }) {
   const navigations = useNavigation();
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       <Image source={{ uri: item.photo }} style={styles.photo} />
@@ -57,17 +61,21 @@ export default function PostItem({ item }) {
             <Feather
               name="thumbs-up"
               size={24}
-              color={item?.likes === 0 ? "#BDBDBD" : "#FF6C00"}
+              color={item?.likesCounter === 0 ? "#BDBDBD" : "#FF6C00"}
+              onPress={() => {
+                dispatch(toggleLike(item.idPost));
+                console.log(item);
+              }}
             />
             <Text
               style={{
                 ...styles.title,
-                color: item.likes === 0 ? "#BDBDBD" : "#212121",
+                color: item.likesCounter === 0 ? "#BDBDBD" : "#212121",
                 marginLeft: 9,
                 fontFamily: "RobotoReg",
               }}
             >
-              {item.likes}
+              {item.likesCounter}
             </Text>
           </View>
           <View
