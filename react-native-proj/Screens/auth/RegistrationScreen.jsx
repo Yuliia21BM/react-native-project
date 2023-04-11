@@ -16,11 +16,14 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
 
 import { authRegistration } from "../../redux/auth/authOperations";
 import { uploadPhotoToServer } from "../../utils/uploadPhotoToServer";
+import { selectIsLoadingPhotoToServer } from "../../redux/auth/authSelectors";
+import { LoaderPhoto } from "../../components/loaderPhoto";
+import { updateIsLoadingPhotoToServer } from "../../redux/auth/authSlice";
 
 const initialState = {
   userEmail: "",
@@ -37,6 +40,8 @@ export default function RegistrationScreen({ navigation }) {
   );
   const [isShownPassword, setIsShownPassword] = useState(true);
   const [focusedInput, setFocusedInput] = useState(null);
+
+  const isLoadingPhotoToServer = useSelector(selectIsLoadingPhotoToServer);
 
   const dispatch = useDispatch();
 
@@ -61,6 +66,7 @@ export default function RegistrationScreen({ navigation }) {
     }
 
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    dispatch(updateIsLoadingPhotoToServer(true));
 
     if (pickerResult.canceled === true) {
       return;
@@ -70,6 +76,7 @@ export default function RegistrationScreen({ navigation }) {
     // console.log(source);
     const uploadedPhoto = await uploadPhotoToServer(source, "avatars");
     setFormData((prevS) => ({ ...prevS, avatar: uploadedPhoto }));
+    dispatch(updateIsLoadingPhotoToServer(false));
   };
 
   const onKeyboardHide = () => {
@@ -110,7 +117,8 @@ export default function RegistrationScreen({ navigation }) {
               }}
             >
               <View style={styles.photoDef}>
-                {formData.avatar && (
+                {isLoadingPhotoToServer && <LoaderPhoto iconSize={25} />}
+                {formData.avatar && !isLoadingPhotoToServer && (
                   <Image
                     source={{ uri: formData.avatar }}
                     style={{ flex: 1, borderRadius: 16 }}

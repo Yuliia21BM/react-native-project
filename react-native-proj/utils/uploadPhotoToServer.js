@@ -1,10 +1,5 @@
 import * as ImageManipulator from "expo-image-manipulator";
-import {
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase/config";
 
 export const uploadPhotoToServer = async (photo, screenName) => {

@@ -17,9 +17,12 @@ import {
 import { Camera } from "expo-camera";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { uploadPostToStore, getAllPosts } from "../redux/posts/postsOperations";
 import { uploadPhotoToServer } from "../utils/uploadPhotoToServer";
+import { updateIsLoadingPhotoToServer } from "../redux/auth/authSlice";
+import { selectIsLoadingPhotoToServer } from "../redux/auth/authSelectors";
+import { LoaderPhoto } from "../components/loaderPhoto";
 
 const initialState = {
   title: "",
@@ -33,6 +36,7 @@ export default function CreatePostScreen({ navigation }) {
   const [snap, setSnap] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const isLoadingPhotoToServer = useSelector(selectIsLoadingPhotoToServer);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -74,6 +78,7 @@ export default function CreatePostScreen({ navigation }) {
     }
 
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    dispatch(updateIsLoadingPhotoToServer(true));
 
     if (pickerResult.canceled === true) {
       return;
@@ -82,13 +87,16 @@ export default function CreatePostScreen({ navigation }) {
     const source = pickerResult.assets[0].uri;
     const uploadedPhoto = await uploadPhotoToServer(source, "avatars");
     setFormData((prevS) => ({ ...prevS, photo: uploadedPhoto }));
+    dispatch(updateIsLoadingPhotoToServer(false));
   };
 
   const takeSnap = async () => {
     const { uri } = await snap.takePictureAsync();
+    dispatch(updateIsLoadingPhotoToServer(true));
     await MediaLibrary.createAssetAsync(uri);
     const uploadedPhoto = await uploadPhotoToServer(uri, "postScreen");
     setFormData((prevS) => ({ ...prevS, photo: uploadedPhoto }));
+    dispatch(updateIsLoadingPhotoToServer(false));
   };
 
   const onSubmitForm = () => {
@@ -136,7 +144,8 @@ export default function CreatePostScreen({ navigation }) {
           <View style={styles.photoWrap}>
             {hasPermission && (
               <Camera style={{ flex: 1 }} ref={setSnap} type={type}>
-                {formData.photo && (
+                {isLoadingPhotoToServer && <LoaderPhoto iconSize={85} />}
+                {formData.photo && !isLoadingPhotoToServer && (
                   <Image source={{ uri: formData.photo }} style={{ flex: 1 }} />
                 )}
                 <TouchableOpacity
@@ -146,7 +155,7 @@ export default function CreatePostScreen({ navigation }) {
                 >
                   <FontAwesome name="camera" size={24} color="#fff" />
                 </TouchableOpacity>
-                {!formData.photo && (
+                {!formData.photo && !isLoadingPhotoToServer && (
                   <TouchableOpacity
                     style={styles.flipContainer}
                     onPress={() => {
