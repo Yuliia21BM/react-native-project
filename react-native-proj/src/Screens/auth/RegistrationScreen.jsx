@@ -32,7 +32,7 @@ const initialState = {
   avatar: "",
 };
 
-export default function RegistrationScreen({ navigation }) {
+function RegistrationScreen({ navigation }) {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [formData, setFormData] = useState(initialState);
   const [dimensions, setDimensions] = useState(
@@ -336,3 +336,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+export default RegistrationScreen;

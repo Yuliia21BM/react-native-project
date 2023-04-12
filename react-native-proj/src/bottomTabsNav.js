@@ -1,10 +1,10 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { StyleSheet, View, Button } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import CreatePostScreen from "./Screens/CreatePostsScreen";
-import ProfileScreen from "./Screens/ProfileScreen";
 import Home from "./Screens/Home";
+import ProfileScreen from "./Screens/ProfileScreen";
 
 const Tabs = createBottomTabNavigator();
 

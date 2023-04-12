@@ -26,6 +26,7 @@ export default function Main() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (isCurrentUser) return;
     dispatch(authStateChanged());
   }, []);
 

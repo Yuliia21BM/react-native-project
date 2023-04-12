@@ -1,13 +1,13 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { Feather } from "@expo/vector-icons";
-import { authLogout } from "../redux/auth/authOperations";
 import { useDispatch } from "react-redux";
+import { authLogout } from "../redux/auth/authOperations";
 
 const Stack = createStackNavigator();
 
-import CommentsScreen from "./CommentsScreen";
 import MapScreen from "./MapScreen";
 import PostScreen from "./PostsScreen";
+import CommentsScreen from "./CommentsScreen";
 
 export default function Home() {
   const dispatch = useDispatch();

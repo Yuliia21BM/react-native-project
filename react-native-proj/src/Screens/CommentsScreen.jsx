@@ -10,6 +10,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import { UserComment } from "../components/userComent";
 import { CommentatorComment } from "../components/comentatorComent";
 import { addCommentToPost } from "../redux/posts/postsOperations";
@@ -17,7 +18,7 @@ import { selectAvatar, selectUserId } from "../redux/auth/authSelectors";
 import { getCommentsByPostId } from "../redux/posts/postsOperations";
 import { selectComments } from "../redux/posts/postsSelectors";
 
-export default function CommentsScreen({ route }) {
+function CommentsScreen({ route }) {
   const currentUserId = useSelector(selectUserId);
   const avatar = useSelector(selectAvatar);
   const postId = route.params.postId;
@@ -139,3 +140,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export default CommentsScreen;

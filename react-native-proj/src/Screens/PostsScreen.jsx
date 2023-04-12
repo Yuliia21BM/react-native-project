@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -8,6 +8,7 @@ import {
   Text,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   selectAvatar,
   selectUserName,
@@ -45,10 +46,7 @@ export default function PostScreen() {
       }}
     >
       <View style={styles.container}>
-        <Image
-          source={avatar ? { uri: avatar } : defaultPhoto}
-          style={styles.photo}
-        />
+        <Image source={avatar && { uri: avatar }} style={styles.photo} />
         <View>
           <Text style={styles.userName}>{userName}</Text>
           <Text style={styles.userEmail}>{userEmaill}</Text>

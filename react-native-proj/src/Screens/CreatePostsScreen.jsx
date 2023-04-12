@@ -18,6 +18,7 @@ import { Camera } from "expo-camera";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import { uploadPostToStore, getAllPosts } from "../redux/posts/postsOperations";
 import { uploadPhotoToServer } from "../utils/uploadPhotoToServer";
 import { updateIsLoadingPhotoToServer } from "../redux/auth/authSlice";
@@ -131,8 +132,13 @@ export default function CreatePostScreen({ navigation }) {
     }
   };
 
-  const onClearForm = () => {
-    setFormData(initialState);
+  const onClearForm = async () => {
+    setFormData({
+      title: "",
+      locationDescr: "",
+      photo: "",
+      location: {},
+    });
   };
 
   return (
@@ -143,7 +149,13 @@ export default function CreatePostScreen({ navigation }) {
         >
           <View style={styles.photoWrap}>
             {hasPermission && (
-              <Camera style={{ flex: 1 }} ref={setSnap} type={type}>
+              <Camera
+                style={{ flex: 1 }}
+                ref={(ref) => {
+                  setSnap(ref);
+                }}
+                type={type}
+              >
                 {isLoadingPhotoToServer && <LoaderPhoto iconSize={85} />}
                 {formData.photo && !isLoadingPhotoToServer && (
                   <Image source={{ uri: formData.photo }} style={{ flex: 1 }} />

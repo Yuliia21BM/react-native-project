@@ -1,3 +1,4 @@
+import * as ImagePicker from "expo-image-picker";
 import {
   StyleSheet,
   Text,
@@ -9,15 +10,14 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+
 import {
   selectOwnPosts,
   selectisLoadingPosts,
 } from "../redux/posts/postsSelectors";
-import * as ImagePicker from "expo-image-picker";
-
-import { AntDesign, Feather } from "@expo/vector-icons";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { uploadPhotoToServer } from "../utils/uploadPhotoToServer";
 import { authLogout, authUpdateAvatar } from "../redux/auth/authOperations";
 import { getOwnPosts } from "../redux/posts/postsOperations";

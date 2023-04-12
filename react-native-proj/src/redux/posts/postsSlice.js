@@ -31,10 +31,22 @@ export const postsSlice = createSlice({
         }
         return post;
       });
+      state.ownItems = state.ownItems.map((post) => {
+        if (post.idPost === postId) {
+          return { ...post, likesCounter };
+        }
+        return post;
+      });
     },
     decrementLikes: (state, { payload }) => {
       const { postId, likesCounter } = payload;
       state.items = state.items.map((post) => {
+        if (post.idPost === postId) {
+          return { ...post, likesCounter };
+        }
+        return post;
+      });
+      state.ownItems = state.ownItems.map((post) => {
         if (post.idPost === postId) {
           return { ...post, likesCounter };
         }

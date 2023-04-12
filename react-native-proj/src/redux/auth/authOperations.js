@@ -16,7 +16,7 @@ export const authRegistration =
   async (dispatch) => {
     try {
       dispatch(updateIsLoading(true));
-      const updatedEmail = userEmail.toLowerCase();
+      const updatedEmail = userEmail.toLowerCase().trim();
       await createUserWithEmailAndPassword(auth, updatedEmail, userPassword);
       await updateProfile(auth.currentUser, {
         displayName: userName,
@@ -50,7 +50,7 @@ export const authLogInUser =
   async (dispatch) => {
     try {
       dispatch(updateIsLoading(true));
-      const updatedEmail = userEmail.toLowerCase();
+      const updatedEmail = userEmail.toLowerCase().trim();
       const { user } = await signInWithEmailAndPassword(
         auth,
         updatedEmail,
@@ -95,12 +95,16 @@ export const authLogout = () => async (dispatch) => {
   }
 };
 
+// AsyncStorage.removeItem("auth_email");
+// AsyncStorage.removeItem("auth_password");
+// AsyncStorage.clear();
 export const authStateChanged = () => async (dispatch) => {
   try {
     const authEmail = await AsyncStorage.getItem("auth_email");
     const authPassword = await AsyncStorage.getItem("auth_password");
 
     const userData = { userEmail: authEmail, userPassword: authPassword };
+    console.log(userData);
 
     if (userData.userEmail) {
       try {
